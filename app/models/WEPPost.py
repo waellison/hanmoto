@@ -17,18 +17,18 @@ October 2021
 """
 from . import db
 
+
 class WEPPost(db.Model):
     __tablename__ = "posts"
 
     post_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-
     title = db.Column(db.String(256), nullable=False,
                       index=db.Index('post_title_idx',
                       postgresql_using='hash'))
 
-    author_id = db.Column(db.Integer, db.ForeignKey(authors.id),
-                          nullable=False)
+#    author_id = db.Column(db.Integer, db.ForeignKey(authors.id),
+#                          nullable=False)
 
     text = db.Column(db.Text)
 
@@ -36,5 +36,4 @@ class WEPPost(db.Model):
         self.post_id = post_id
         self.title = title
         self.author_id = author_id
-        self.text
-
+        self.text = text
