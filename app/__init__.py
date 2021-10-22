@@ -13,38 +13,12 @@ William Ellison
 October 2021
 """
 import os
-import sys
 import pkgutil
 import importlib
 from flask import Flask, Blueprint
 from flask_migrate import Migrate
-from .models import *
-from .views import *
-
-def _register_blueprints(app, package_name, package_path):
-    """
-    Register all blueprint instances on the specified Flask application
-    found in all modules for the specified package.
-    
-    H/T to Github user mattupstate, link:
-    https://gist.github.com/mattupstate/5859194
-
-    Args:
-    - app: the Flask application instance
-    - package_name: the package name
-    - package_path: the package path
-    """
-    rv = []
-    
-    for _, name, _ in pkgutil.iter_modules(package_path):
-        m = importlib.import_module(f"{package_name}.{name}")
-        for item in dir(m):
-            item = getattr(m, item)
-            if isinstance(item, Blueprint):
-                app.register_blueprint(item)
-            rv.append(item)
-
-    return rv
+from . import models
+from . import views
 
 
 def wep_create_app(test_config=None):
@@ -66,9 +40,7 @@ def wep_create_app(test_config=None):
     try:
         os.makedirs(app.instance_path)
     except OSError as ex:
-        print("wep_create_app: failed to create instance directories")
-        print(f"Python reports this error: {ex}")
-        sys.exit(1)
+        pass
 
     from .models import db
     db.app = app
@@ -76,8 +48,7 @@ def wep_create_app(test_config=None):
     db.create_all()
     _ = Migrate(app, db)
 
-    enregistered_models = register_blueprints(app, "models", ".")
-    enregistered_views = register_blueprints(app, "views", ".")
+    from .views import posts
+    app.register_blueprint(posts.bp)
 
     return app
-
