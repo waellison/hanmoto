@@ -18,24 +18,27 @@ October 2021
 from markdown import Markdown
 from smartypants import smartypants
 from slugify import slugify
-from . import db
-from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful, WEPHtmlSerializable
+from .. import wep_ap_date_format
+from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful
 
 
-class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful, WEPHtmlSerializable):
+class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful):
     __tablename__ = "posts"
 
-    def __init__(self, is_published, creation_date, last_edit_date, publication_date, name, summary, content):
-        super(WEPEntity).__init__(is_published, creation_date, last_edit_date, publication_date)
-        super(WEPSluggable).__init__(name)
-        super(WEPNameable).__init__(name)
-        super(WEPSummarizable).__init__(summary)
-        super(WEPContentful).__init__(content)
+    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary, content):
+        super().__init__(is_published, create_date, modify_date, publish_date)
+        self.slug = slugify(name)
+        self.name = name
+        self.content = content
+        self.summary = summary
 
     def json_serialize(self) -> dict[str, any]:
         attrs = super().json_serialize()
         attrs['name'] = self.name
         attrs['summary'] = self.summary
         attrs['slug'] = self.slug
-        attrs['contents'] = self.content
+        attrs['content'] = self.content
         return attrs
+
+    def listify(self):
+        return f"<li><a href='/posts/{self.id}'>{self.name}</a> (posted {wep_ap_date_format(self.publication_date)})</li>"
