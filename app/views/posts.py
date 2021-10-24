@@ -1,8 +1,20 @@
-from flask import Blueprint, abort, request, Response
+"""Post-related view routes for WillPress.
+
+"An Excellent Blog Engine"
+
+Copyright (c) 2021 by William Ellison.  This program is licensed under
+the terms of the Do What the Fuck You Want To Public License, version 2
+or later, as described in the COPYING file at the root of this
+distribution.
+
+William Ellison
+<waellison@gmail.com>
+October 2021
+"""
+from flask import Blueprint, Response
 import sqlalchemy
 from ..utils import wep_ap_date_format
 from . import wep_erect, SITE_NAME
-from ..models import db
 from ..models.WEPPost import WEPPost
 
 
