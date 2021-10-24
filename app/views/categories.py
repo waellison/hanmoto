@@ -1,7 +1,18 @@
-import sqlalchemy
-import flask_sqlalchemy
-from flask import Blueprint, abort, request, jsonify, Response
-from . import wep_erect
+"""Category-related views for WillPress.
+
+"An Excellent Blog Engine"
+
+Copyright (c) 2021 by William Ellison.  This program is licensed under
+the terms of the Do What the Fuck You Want To Public License, version 2
+or later, as described in the COPYING file at the root of this
+distribution.
+
+William Ellison
+<waellison@gmail.com>
+October 2021
+"""
+from flask import Blueprint, Response
+from . import wep_erect, SITE_NAME
 from ..models import db
 from ..models.WEPCategory import WEPCategory
 
@@ -44,7 +55,7 @@ def list_all_categories():
     """)
 
     body_html = list()
-    body_html.append(f"<h2>Categories on this site</h2>")
+    body_html.append(f"<h2>Categories on {SITE_NAME}</h2>")
     body_html.append("<ul>")
 
     for result in results:
