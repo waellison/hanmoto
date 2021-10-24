@@ -1,0 +1,61 @@
+import sqlalchemy
+from flask import Blueprint, abort, request, jsonify, Response
+from . import SITE_NAME, POSTS_PER_PAGE
+from . import wep_erect
+from ..models.WEPPost import WEPPost
+from ..utils import wep_ap_date_format
+
+bp = Blueprint('home', __name__, url_prefix='/')
+
+
+@bp.route('/', methods=['GET'])
+def show_homepage() -> Response:
+    return show_paginated_page(1)
+
+
+@bp.route('/<int:page_number>', methods=['GET'])
+def show_paginated_page(page_number: int) -> Response:
+    posts = WEPPost.query.order_by(sqlalchemy.desc(WEPPost.publication_date))
+    body_html = []
+    offset = POSTS_PER_PAGE * (page_number - 1)
+    my_posts = posts[offset:offset + POSTS_PER_PAGE]
+
+    if page_number == 1:
+        prev = None
+    else:
+        prev = page_number - 1
+
+    if len(my_posts) != POSTS_PER_PAGE:
+        next = None
+    else:
+        next = page_number + 1
+
+    for post in my_posts:
+        title_str = post.html_serialize_name(level=2)
+        summary_html = post.html_serialize_summary()
+        body_html.append("<article>")
+        body_html.append(title_str)
+        body_html.append(f"<p class='post-date'>Posted {wep_ap_date_format(post.publication_date)}</p>")
+        body_html.append(summary_html)
+        body_html.append(f"<p><a href='/posts/{post.id}'>Read more&hellip;</a></p>")
+        post_categories = [c.linkify() for c in post.categories]
+        body_html.append(f"Categories: {' &bull; '.join(post_categories)}")
+        body_html.append("</article>")
+
+    if prev or next:
+        body_html.append("<p class='pagination-nav'>")
+
+    if prev:
+        body_html.append(f"<a href='/{prev}'>&laquo; Previous</a>")
+
+    if prev and next:
+        body_html.append(" &bull; ")
+
+    if next:
+        body_html.append(f"<a href='/{next}'>Next &raquo;</a>")
+
+    if prev or next:
+        body_html.append("</p>")
+
+    output = wep_erect(title=f"{SITE_NAME}: Home", body_html="\n".join(body_html))
+    return Response(output, mimetype='text/html')

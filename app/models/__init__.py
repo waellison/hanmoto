@@ -15,4 +15,3 @@ October 2021
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-
