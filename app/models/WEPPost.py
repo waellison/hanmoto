@@ -15,25 +15,27 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from markdown import Markdown
+from smartypants import smartypants
+from slugify import slugify
 from . import db
+from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful, WEPHtmlSerializable
 
 
-class WEPPost(db.Model):
+class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful, WEPHtmlSerializable):
     __tablename__ = "posts"
 
-    post_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    def __init__(self, is_published, creation_date, last_edit_date, publication_date, name, summary, content):
+        super(WEPEntity).__init__(is_published, creation_date, last_edit_date, publication_date)
+        super(WEPSluggable).__init__(name)
+        super(WEPNameable).__init__(name)
+        super(WEPSummarizable).__init__(summary)
+        super(WEPContentful).__init__(content)
 
-    title = db.Column(db.String(256), nullable=False,
-                      index=db.Index('post_title_idx',
-                      postgresql_using='hash'))
-
-#    author_id = db.Column(db.Integer, db.ForeignKey(authors.id),
-#                          nullable=False)
-
-    text = db.Column(db.Text)
-
-    def __init__(self, post_id, title, author_id, text):
-        self.post_id = post_id
-        self.title = title
-        self.author_id = author_id
-        self.text = text
+    def json_serialize(self) -> dict[str, any]:
+        attrs = super().json_serialize()
+        attrs['name'] = self.name
+        attrs['summary'] = self.summary
+        attrs['slug'] = self.slug
+        attrs['contents'] = self.content
+        return attrs
