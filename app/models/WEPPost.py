@@ -15,10 +15,8 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
-from markdown import Markdown
-from smartypants import smartypants
 from slugify import slugify
-from .. import wep_ap_date_format
+from ..utils import wep_ap_date_format
 from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful
 
 
