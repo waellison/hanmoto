@@ -1,5 +1,4 @@
-"""
-User and author classes for WillPress.
+"""User and author classes for WillPress.
 
 "An Excellent Blog Engine"
 
@@ -16,15 +15,20 @@ October 2021
 """
 from . import db
 
+
 class WEPUser(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.String(16), nullable=False, unique=True,
+                         index=db.Index('username_idx', postgresql_using='hash'))
 
-    username = db.Column(db.String(16), nullable=False, unique=True
-                      index=db.Index('username_idx',
-                      postgresql_using='hash'))
+    def __init__(self, username: str):
+        self.username = username
 
-    def __init__(self, user_id, username):
-        self.user_id = user_id
 
+class WEPAuthor(WEPUser):
+    __tablename__ = "authors"
+
+    def __init__(self, username: str):
+        super().__init__(username)
