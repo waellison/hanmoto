@@ -1,5 +1,4 @@
-"""
-Model-specific logic for WillPress.
+"""Model-specific logic for WillPress.
 
 "An Excellent Blog Engine"
 
@@ -14,4 +13,6 @@ October 2021
 """
 from flask_sqlalchemy import SQLAlchemy
 
+"""The database object representing our connection to the WillPress
+   backing store."""
 db = SQLAlchemy()
