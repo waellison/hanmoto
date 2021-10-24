@@ -12,7 +12,6 @@ William Ellison
 October 2021
 """
 import datetime
-from slugify import slugify
 from markdown import Markdown
 from smartypants import smartypants
 from . import db
