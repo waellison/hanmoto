@@ -1,5 +1,4 @@
-"""
-Post class for WillPress.
+"""Post class for WillPress.
 
 "An Excellent Blog Engine"
 
@@ -21,9 +20,28 @@ from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggab
 
 
 class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful):
+    """
+    Model class for posts.
+
+    A post is a date-stamped content entity attributed to an author.  It consists of
+    the content, an optional summary of that content, a name, a slug derived from the
+    name, and the standard attributes of all WEPEntity instances.
+    """
     __tablename__ = "posts"
 
     def __init__(self, is_published, create_date, modify_date, publish_date, name, summary, content):
+        """
+        Create a new post.
+
+        Args:
+            is_published: [boolean] whether the post is published or not
+            create_date: [datetime] the date the post was created
+            modify_date: [datetime] the date the post was last modified
+            publish_date: [datetime] the date the post was published
+            name: [string] the name of the post
+            summary: [string] a Markdown-formatted string containing a brief summary of the post
+            content: [string] a Markdown-formatted string containing the post's content
+        """
         super().__init__(is_published, create_date, modify_date, publish_date)
         self.slug = slugify(name)
         self.name = name
@@ -31,6 +49,12 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         self.summary = summary
 
     def json_serialize(self) -> dict[str, any]:
+        """
+        Serialize a post into a format fit for JSON.
+
+        Returns:
+            A dict containing the post's attributes
+        """
         attrs = super().json_serialize()
         attrs['name'] = self.name
         attrs['summary'] = self.summary
@@ -39,4 +63,10 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         return attrs
 
     def listify(self):
+        """
+        Create an HTML list item from a post.
+
+        Returns:
+            A string containing a link to the post, formatted as an HTML list item.
+        """
         return f"<li><a href='/posts/{self.id}'>{self.name}</a> (posted {wep_ap_date_format(self.publication_date)})</li>"
