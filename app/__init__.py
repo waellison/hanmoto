@@ -13,9 +13,7 @@ William Ellison
 October 2021
 """
 import os
-import pkgutil
-import importlib
-from flask import Flask, Blueprint
+from flask import Flask
 from flask_migrate import Migrate
 from . import models
 from . import views
@@ -39,7 +37,7 @@ def wep_create_app(test_config=None):
 
     try:
         os.makedirs(app.instance_path)
-    except OSError as ex:
+    except OSError:
         pass
 
     from .models import db
@@ -48,7 +46,8 @@ def wep_create_app(test_config=None):
     db.create_all()
     _ = Migrate(app, db)
 
-    from .views import posts
+    from .views import posts, categories
     app.register_blueprint(posts.bp)
+    app.register_blueprint(categories.bp)
 
     return app
