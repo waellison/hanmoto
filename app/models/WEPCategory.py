@@ -33,5 +33,8 @@ class WEPCategory(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable):
         attrs['associated_post_count'] = len(self.associated_posts)
         return attrs
 
+    def linkify(self) -> str:
+        return f"<a href='/categories/{self.id}'>{self.name}</a>"
+
     def listify(self) -> str:
-        return f"<li><a href='/categories/{self.id}'>{self.name}</a> ({len(self.associated_posts)} posts)</li>"
+        return f"<li>{self.linkify()} ({len(self.associated_posts)} posts)</li>"
