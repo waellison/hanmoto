@@ -6,6 +6,7 @@ tmp
 temp.*
 ./build/
 .idea/
+.env
 
 # from flask docs
 *.pyc

@@ -13,10 +13,11 @@ October 2021
 """
 import sqlalchemy
 from flask import Blueprint, Response
-from . import SITE_NAME, POSTS_PER_PAGE
-from . import wep_erect
+from flask_dance.contrib.google import google
+from . import wep_erect, SITE_NAME, POSTS_PER_PAGE
 from ..models.WEPPost import WEPPost
 from ..utils import wep_ap_date_format
+
 
 bp = Blueprint('home', __name__, url_prefix='/')
 

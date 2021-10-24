@@ -22,9 +22,11 @@ class WEPUser(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(16), nullable=False, unique=True,
                          index=db.Index('username_idx', postgresql_using='hash'))
+    password = db.Column(db.String(128), nullable=False)
 
-    def __init__(self, username: str):
+    def __init__(self, username: str, password: str):
         self.username = username
+        self.password = password
 
 
 class WEPAuthor(WEPUser):

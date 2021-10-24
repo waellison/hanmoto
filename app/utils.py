@@ -1,6 +1,9 @@
 from datetime import datetime
 
 
+env = dict()
+
+
 def wep_ap_date_format(date: datetime) -> str:
     abbreviations = {
         "months": [
