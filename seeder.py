@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-from datetime import datetime, tzinfo, timedelta
-import string
+from datetime import datetime, timedelta
 import random
 from faker import Faker
 from app import wep_create_app
