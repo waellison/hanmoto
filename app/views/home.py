@@ -1,5 +1,5 @@
 import sqlalchemy
-from flask import Blueprint, abort, request, jsonify, Response
+from flask import Blueprint, Response
 from . import SITE_NAME, POSTS_PER_PAGE
 from . import wep_erect
 from ..models.WEPPost import WEPPost
@@ -21,14 +21,14 @@ def show_paginated_page(page_number: int) -> Response:
     my_posts = posts[offset:offset + POSTS_PER_PAGE]
 
     if page_number == 1:
-        prev = None
+        prev_page = None
     else:
-        prev = page_number - 1
+        prev_page = page_number - 1
 
     if len(my_posts) != POSTS_PER_PAGE:
-        next = None
+        next_page = None
     else:
-        next = page_number + 1
+        next_page = page_number + 1
 
     for post in my_posts:
         title_str = post.html_serialize_name(level=2)
@@ -42,19 +42,19 @@ def show_paginated_page(page_number: int) -> Response:
         body_html.append(f"Categories: {' &bull; '.join(post_categories)}")
         body_html.append("</article>")
 
-    if prev or next:
+    if prev_page or next_page:
         body_html.append("<p class='pagination-nav'>")
 
-    if prev:
-        body_html.append(f"<a href='/{prev}'>&laquo; Previous</a>")
+    if prev_page:
+        body_html.append(f"<a href='/{prev_page}'>&laquo; Previous</a>")
 
-    if prev and next:
+    if prev_page and next_page:
         body_html.append(" &bull; ")
 
-    if next:
-        body_html.append(f"<a href='/{next}'>Next &raquo;</a>")
+    if next_page:
+        body_html.append(f"<a href='/{next_page}'>Next &raquo;</a>")
 
-    if prev or next:
+    if prev_page or next_page:
         body_html.append("</p>")
 
     output = wep_erect(title=f"{SITE_NAME}: Home", body_html="\n".join(body_html))
