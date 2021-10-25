@@ -1,4 +1,6 @@
-<% from flask import url_for %>
+<%
+    from flask import url_for
+%>
 <!DOCTYPE html>
 <html>
   <head>
@@ -15,12 +17,12 @@
           <a href='/'>Home</a>
         </li>
         <li>
-          % if google_data is None:
+          % if user is None:
             <a href="/login">Login</a>
           % else:
-            <img src="${google_data['picture']}" class="profile-picture">
-            Welcome, <a href="/users/${google_data['id']}">
-              ${google_data['given_name']}</a> (<a href="/logout">Logout</a>)
+            <img src="${user['avatar']}" class="profile-picture">
+            Welcome, <a href="/users/${user['user_id']}">
+              ${user['username']}</a> (<a href="/logout">Logout</a>)
           % endif
         </li>
       </menu>

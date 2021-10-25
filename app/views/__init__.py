@@ -12,17 +12,13 @@ William Ellison
 October 2021
 """
 from mako.template import Template
-from flask_dance.contrib.google import google
+from flask import session
+
 
 SITE_NAME = "WillPress Test Site"
 POSTS_PER_PAGE = 7
 
 
 def wep_erect(**kwargs):
-    if google.authorized:
-        google_data = google.get('/oauth2/v2/userinfo').json()
-    else:
-        google_data = None
-
-    tmpl = Template(filename='./app/views/basic_scaffold.mako')
-    return tmpl.render(site_name=SITE_NAME, google_data=google_data, **kwargs)
+    tmpl = Template(filename='./views/basic_scaffold.mako')
+    return tmpl.render(site_name=SITE_NAME, user=session.get('user', None), **kwargs)

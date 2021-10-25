@@ -23,14 +23,21 @@ class WEPUser(db.Model):
     username = db.Column(db.String(16), nullable=False, unique=True,
                          index=db.Index('username_idx', postgresql_using='hash'))
     password = db.Column(db.String(128), nullable=False)
+    salt = db.Column(db.String(32), nullable=False)
+    email = db.Column(db.String(64), nullable=False, unique=True)
+    avatar = db.Column(db.String, nullable=False)
 
-    def __init__(self, username: str, password: str):
+    def __init__(self, username: str, password: str, salt: str, email: str, avatar: str):
         self.username = username
         self.password = password
+        self.salt = salt
+        self.email = email
+        self.avatar = avatar
 
-
-class WEPAuthor(WEPUser):
-    __tablename__ = "authors"
-
-    def __init__(self, username: str):
-        super().__init__(username)
+    def json_serialize(self):
+        return {
+            'user_id': self.user_id,
+            'username': self.username,
+            'email': self.email,
+            'avatar': self.avatar
+        }

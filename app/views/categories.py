@@ -11,6 +11,7 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from sqlalchemy import sql
 from flask import Blueprint, Response
 from . import wep_erect, SITE_NAME
 from ..models import db
@@ -42,7 +43,7 @@ def read_specific_category(cat_id: int) -> Response:
 
 @bp.route('/all', methods=['GET'])
 def list_all_categories():
-    results = db.session.execute("""
+    results = db.session.execute(sql.text("""
         WITH category_occurrences AS (
             SELECT category_id, COUNT(*) AS posts_in_category
             FROM post_categories
@@ -52,7 +53,7 @@ def list_all_categories():
         INNER JOIN categories c
         ON c.id = co.category_id
         ORDER BY posts_in_category DESC;
-    """)
+    """)).fetchall()
 
     body_html = list()
     body_html.append(f"<h2>Categories on {SITE_NAME}</h2>")
