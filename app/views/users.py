@@ -1,5 +1,5 @@
 from sqlalchemy import exc
-from flask import Blueprint, Response, request, abort, redirect, session, url_for
+from flask import Blueprint, Response, request, abort, redirect, url_for
 from ..models import db
 from ..utils import wep_encypher_pw, wep_check_all_params_against_set, wep_make_gravatar_img
 from ..models.WEPUser import WEPUser
