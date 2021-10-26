@@ -10,6 +10,7 @@ or later, as described in the COPYING file at the root of this
 distribution.
 
 William Ellison
+
 <waellison@gmail.com>
 October 2021
 """
@@ -41,3 +42,6 @@ class WEPUser(db.Model):
             'email': self.email,
             'avatar': self.avatar
         }
+
+    def html_serialize(self):
+        return f"<a href='/users/{self.user_id}'>{self.username}</a>"

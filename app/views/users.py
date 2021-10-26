@@ -41,4 +41,4 @@ def register_user() -> Response:
 
 @bp.route('<int:user_id>', methods=['GET'])
 def show_user(user_id: int) -> Response:
-    
+    return None

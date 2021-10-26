@@ -15,6 +15,7 @@ William Ellison
 October 2021
 """
 from slugify import slugify
+from . import db
 from ..utils import wep_ap_date_format
 from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful
 
@@ -29,7 +30,10 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
     """
     __tablename__ = "posts"
 
-    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary, content):
+    author = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    post_author = db.relationship('WEPUser', backref=db.backref('posts'))
+
+    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary, content, author):
         """
         Create a new post.
 
@@ -41,12 +45,14 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
             name: [string] the name of the post
             summary: [string] a Markdown-formatted string containing a brief summary of the post
             content: [string] a Markdown-formatted string containing the post's content
+            author: [integer] key to the author of this post
         """
         super().__init__(is_published, create_date, modify_date, publish_date)
         self.slug = slugify(name)
         self.name = name
         self.content = content
         self.summary = summary
+        self.author = author
 
     def json_serialize(self) -> dict[str, any]:
         """
@@ -70,3 +76,6 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
             A string containing a link to the post, formatted as an HTML list item.
         """
         return f"<li><a href='/posts/{self.id}'>{self.name}</a> (posted {wep_ap_date_format(self.publication_date)})</li>"
+
+    def html_serialize_author(self):
+        return f"<p>Written by {self.post_author.html_serialize()} on {wep_ap_date_format(self.publication_date)}</p>"
