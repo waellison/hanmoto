@@ -12,7 +12,7 @@ William Ellison
 October 2021
 """
 from sqlalchemy import sql
-from flask import Blueprint, Response
+from flask import Blueprint, Response, jsonify
 from . import wep_erect, SITE_NAME
 from ..models import db
 from ..models.WEPCategory import WEPCategory
