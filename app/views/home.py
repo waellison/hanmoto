@@ -49,7 +49,7 @@ def show_paginated_page(page_number: int) -> Response:
         summary_html = post.html_serialize_summary()
         body_html.append("<article>")
         body_html.append(title_str)
-        body_html.append(f"<p class='post-date'>Posted {wep_ap_date_format(post.publication_date)}</p>")
+        body_html.append(f"<p class='post-date'>Posted {wep_ap_date_format(post.publication_date)} by {post.post_author.html_serialize()}</p>")
         body_html.append(summary_html)
         body_html.append(f"<p><a href='/posts/{post.id}'>Read more&hellip;</a></p>")
         post_categories = [c.linkify() for c in post.categories]
