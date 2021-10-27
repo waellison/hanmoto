@@ -1,13 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,700;1,400&display=swap');
+
 html {
-    font-family: sans-serif;
-    background: #eee;
-    padding: 1rem;
+    font-family: Roboto, sans-serif;
+    background: #d8d8d8;
+    padding: 0 1rem;
+    margin: 0;
 }
 
 body {
     max-width: 960px;
     margin: 0 auto;
     background: white;
+    padding: 0 1rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.login-container {
+    width: 33%;
+    margin: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+@media screen and (max-width: 767px) {
+    .login-container {
+        width: 100%;
+    }
 }
 
 h1 {
@@ -30,6 +63,7 @@ nav {
     display: flex;
     align-items: center;
     padding: 0 0.5rem;
+    margin: 0 -1rem;
 }
 
 nav h1 {
@@ -42,16 +76,20 @@ nav h1 a {
     padding: 0.25rem 0.5rem;
 }
 
-nav ul {
+nav menu {
     display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
+    width: 100%;
+    height: 4rem;
 }
 
-nav ul li a, nav ul li span, header .action {
-    display: block;
-    padding: 0.5rem;
+nav menu li, nav menu li {
+    padding: 0 0.5rem;
+    width: auto;
+    height: 4rem;
+    line-height: 4rem;
 }
 
 .content {
@@ -67,6 +105,10 @@ nav ul li a, nav ul li span, header .action {
 .content > header h1 {
     flex: auto;
     margin: 1rem 0 0.25rem 0;
+}
+
+article {
+    width: 100%;
 }
 
 .flash {
@@ -134,7 +176,9 @@ input[type=submit] {
 }
 
 img.profile-picture {
-    height: 24px;
-    width: 24px;
+    height: 2rem;
+    width: 2rem;
+    margin-top: 1rem;
     border-radius: 50%;
+    display: inline-block;
 }
