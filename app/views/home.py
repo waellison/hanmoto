@@ -36,12 +36,12 @@ def show_paginated_page(page_number: int) -> Response:
     if page_number == 1:
         prev_page = None
     else:
-        prev_page = page_number - 1
+        prev_page = f"<a href='/{page_number - 1}'>&laquo; Previous</a>",
 
     if len(my_posts) != POSTS_PER_PAGE:
         next_page = None
     else:
-        next_page = page_number + 1
+        next_page = f"<a href='/{page_number + 1}'>Next &raquo;",
 
     for post in my_posts:
         if not post.is_published:
@@ -57,9 +57,7 @@ def show_paginated_page(page_number: int) -> Response:
         body_html.append(f"Categories: {' &bull; '.join(post_categories)}")
         body_html.append("</article>")
 
-    wep_make_pagination_links(f"<a href='/{prev_page}'>&laquo; Previous</a>",
-                              f"<a href='/{next_page}'>Next &raquo;",
-                              body_html)
+    wep_make_pagination_links(prev_page, next_page, body_html)
 
     output = wep_erect(title=f"{SITE_NAME}: Home", body_html="\n".join(body_html))
     return Response(output, mimetype='text/html')

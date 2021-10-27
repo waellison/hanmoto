@@ -73,6 +73,9 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         attrs['content'] = self.content
         return attrs
 
+    def linkify(self, presigil="", postsigil=""):
+        return f"<a href='/posts/{self.id}'>{presigil}{self.name}{postsigil}</a>"
+
     def listify(self):
         """
         Create an HTML list item from a post.
@@ -80,7 +83,7 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         Returns:
             A string containing a link to the post, formatted as an HTML list item.
         """
-        return f"<li><a href='/posts/{self.id}'>{self.name}</a> (posted {wep_ap_date_format(self.publication_date)})</li>"
+        return f"<li>{self.linkify()} (posted {wep_ap_date_format(self.publication_date)})</li>"
 
     def html_serialize_author(self):
         edit_link = f"<a href='/admin/posts/edit?id={self.id}'>[Edit]</a>" if session.get('user', None) else ""
