@@ -1,5 +1,6 @@
 from sqlalchemy import exc
 from flask import Blueprint, Response, request, abort, redirect, url_for
+from . import wep_erect, SITE_NAME
 from ..models import db
 from ..utils import wep_encypher_pw, wep_check_all_params_against_set, wep_make_gravatar_img
 from ..models.WEPUser import WEPUser
@@ -41,4 +42,13 @@ def register_user() -> Response:
 
 @bp.route('<int:user_id>', methods=['GET'])
 def show_user(user_id: int) -> Response:
-    return None
+    user = WEPUser.query.get_or_404(user_id)
+    body_html = list()
+    body_html.append(f"<h2>User <em>{user.username}</em></h2>")
+    body_html.append("<p>This user has written the following posts.")
+    body_html.append("<ul>")
+    body_html.extend([p.listify() for p in user.posts])
+    body_html.append("</ul>")
+    inner_html = "\n".join(body_html)
+    output = wep_erect(title=f"{SITE_NAME} | User {user.username}", body_html=inner_html)
+    return Response(output, mimetype='text/html')
