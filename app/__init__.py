@@ -17,7 +17,7 @@ import dotenv
 from flask import Flask
 from flask_migrate import Migrate
 from .models import db
-from .views import categories, posts, home, users, login, logout
+from .views import admin, categories, posts, home, users, login, logout
 
 
 def wep_create_app(test_config=None):
@@ -30,7 +30,8 @@ def wep_create_app(test_config=None):
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         SQLALCHEMY_ECHO=True,
         SESSION_PERMANENT=False,
-        SESSION_TYPE="filesystem"
+        SESSION_TYPE="filesystem",
+        FLASK_ADMIN_SWATCH='cerulean'
     )
 
     if test_config is None:
@@ -47,6 +48,9 @@ def wep_create_app(test_config=None):
     db.init_app(app)
     db.create_all()
     _ = Migrate(app, db)
+
+    admin.app = app
+    admin.init_app(app)
 
     app.register_blueprint(posts.bp)
     app.register_blueprint(categories.bp)

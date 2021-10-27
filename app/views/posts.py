@@ -12,12 +12,22 @@ William Ellison
 October 2021
 """
 from flask import Blueprint, Response
+from flask_admin.contrib.sqla import ModelView
 import sqlalchemy
-from . import wep_erect, SITE_NAME
+from . import wep_erect, SITE_NAME, admin
+from ..models import db
 from ..models.WEPPost import WEPPost
 
 
-bp = Blueprint('posts', __name__, url_prefix='/posts')
+bp = Blueprint('posts-view', __name__, url_prefix='/posts')
+
+
+class PostAdminView(ModelView):
+    page_size = 10
+    column_exclude_list = ['content', 'creation_date', 'last_edit_date', 'slug']
+
+
+admin.add_view(PostAdminView(WEPPost, db.session, name='Posts', endpoint='posts'))
 
 
 @bp.route('<int:post_id>', methods=['GET'])
@@ -37,11 +47,11 @@ def read_specific_post(post_id: int) -> Response:
 
 @bp.route('/all', methods=['GET'])
 def list_all_posts() -> Response:
-    posts = WEPPost.query.order_by(sqlalchemy.desc(WEPPost.publication_date)).all()
+    posts = WEPPost.query.filter_by(is_published=True).order_by(sqlalchemy.desc(WEPPost.publication_date)).all()
     stuff = list()
     stuff.append(f"<h2>Posts on {SITE_NAME}</h2>")
     stuff.append("<ol>")
-    stuff.extend([p.listify() for p in posts])
+    stuff.extend([p.listify() for p in posts if p.is_published])
     stuff.append("</ol>")
     post_html = "\n".join(stuff)
     output = wep_erect(title="Posts on this site", body_html=post_html)

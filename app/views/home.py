@@ -44,6 +44,8 @@ def show_paginated_page(page_number: int) -> Response:
         next_page = page_number + 1
 
     for post in my_posts:
+        if not post.is_published:
+            continue
         title_str = post.html_serialize_name(level=2)
         summary_html = post.html_serialize_summary()
         body_html.append("<article>")

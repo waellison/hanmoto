@@ -14,10 +14,12 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from flask import session
 from slugify import slugify
 from . import db
 from ..utils import wep_ap_date_format
 from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful
+from .WEPUser import WEPUser
 
 
 class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful):
@@ -54,6 +56,9 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         self.summary = summary
         self.author = author
 
+    def __str__(self):
+        return self.name
+
     def json_serialize(self) -> dict[str, any]:
         """
         Serialize a post into a format fit for JSON.
@@ -78,4 +83,5 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         return f"<li><a href='/posts/{self.id}'>{self.name}</a> (posted {wep_ap_date_format(self.publication_date)})</li>"
 
     def html_serialize_author(self):
-        return f"<p>Written by {self.post_author.html_serialize()} on {wep_ap_date_format(self.publication_date)}</p>"
+        edit_link = f"<a href='/admin/posts/edit?id={self.id}'>[Edit]</a>" if session.get('user', None) else ""
+        return f"<p>Written by {self.post_author.html_serialize()} on {wep_ap_date_format(self.publication_date)} {edit_link}</p>"

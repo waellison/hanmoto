@@ -13,10 +13,11 @@ October 2021
 """
 from mako.template import Template
 from flask import session
-
+from flask_admin import Admin
 
 SITE_NAME = "WillPress Test Site"
 POSTS_PER_PAGE = 7
+admin = Admin()
 
 
 def wep_erect(**kwargs):
