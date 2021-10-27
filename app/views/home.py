@@ -21,12 +21,12 @@ from ..utils import wep_ap_date_format
 bp = Blueprint('home', __name__, url_prefix='/')
 
 
-@bp.route('/', methods=['GET'])
+@bp.route('/', methods=['GET', 'POST'])
 def show_homepage() -> Response:
     return show_paginated_page(1)
 
 
-@bp.route('/<int:page_number>', methods=['GET'])
+@bp.route('/<int:page_number>', methods=['GET', 'POST'])
 def show_paginated_page(page_number: int) -> Response:
     posts = WEPPost.query.order_by(sqlalchemy.desc(WEPPost.publication_date))
     body_html = []

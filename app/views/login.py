@@ -1,36 +1,38 @@
 from flask import Blueprint, Response, request, abort, redirect, session, url_for
+from mako.template import Template
+from . import wep_erect, SITE_NAME
 from ..utils import wep_encypher_pw, wep_check_all_params_against_set
 from ..models.WEPUser import WEPUser
 
 bp = Blueprint("login", __name__, url_prefix='/login')
 
 
-@bp.route('', methods=['GET'])
-def show_login():
-    return Response("fack", mimetype='text/html')
+@bp.route('', methods=['GET', 'POST'])
+def do_login():
+    if request.method == 'POST':
+        required_params = {
+            "username",
+            "password"
+        }
 
+        missing_params = wep_check_all_params_against_set(required_params, request.form)
 
-@bp.route('', methods=['POST'])
-def try_login():
-    required_params = {
-        "username",
-        "password"
-    }
+        if not missing_params:
+            username = request.form['username']
+            user = WEPUser.query.filter_by(username=username).first()
 
-    missing_params = wep_check_all_params_against_set(required_params, request.form)
-
-    if not missing_params:
-        username = request.form['username']
-        user = WEPUser.query.filter_by(username=username).first()
-
-        if user:
-            _, hashed_pw = wep_encypher_pw(request.form['password'], salt=user.salt)
-            if hashed_pw == user.password:
-                session['user'] = user.json_serialize()
-                return redirect(url_for('home.show_homepage'), code=303)
+            if user:
+                _, hashed_pw = wep_encypher_pw(request.form['password'], salt=user.salt)
+                if hashed_pw == user.password:
+                    session['user'] = user.json_serialize()
+                    return redirect(url_for('home.show_homepage'), code=303)
+                else:
+                    abort(403)
             else:
-                abort(403)
+                abort(401)
         else:
-            abort(401)
-    else:
-        abort(400)
+            abort(400)
+    elif request.method == 'GET':
+        body_html = Template(filename="./templates/login.mako").render()
+        return Response(wep_erect(body_html=body_html, extra_stylesheets=['login'],
+                                  title=f'{SITE_NAME} | Login'), mimetype='text/html')

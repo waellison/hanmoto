@@ -20,5 +20,5 @@ POSTS_PER_PAGE = 7
 
 
 def wep_erect(**kwargs):
-    tmpl = Template(filename='./views/basic_scaffold.mako')
+    tmpl = Template(filename='./templates/default.mako')
     return tmpl.render(site_name=SITE_NAME, user=session.get('user', None), **kwargs)
