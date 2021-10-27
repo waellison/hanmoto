@@ -23,3 +23,20 @@ admin = Admin()
 def wep_erect(**kwargs):
     tmpl = Template(filename='./templates/default.mako')
     return tmpl.render(site_name=SITE_NAME, user=session.get('user', None), **kwargs)
+
+
+def wep_make_pagination_links(prev_page: str, next_page: str, body_html: list, sep=" &bull; "):
+    if prev_page or next_page:
+        body_html.append("<p class='pagination-nav'>")
+
+    if prev_page:
+        body_html.append(prev_page)
+
+    if prev_page and next_page:
+        body_html.append(sep)
+
+    if next_page:
+        body_html.append(next_page)
+
+    if prev_page or next_page:
+        body_html.append("</p>")

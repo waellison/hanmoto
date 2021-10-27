@@ -13,7 +13,7 @@ October 2021
 """
 import sqlalchemy
 from flask import Blueprint, Response
-from . import wep_erect, SITE_NAME, POSTS_PER_PAGE
+from . import wep_erect, SITE_NAME, POSTS_PER_PAGE, wep_make_pagination_links
 from ..models.WEPPost import WEPPost
 from ..utils import wep_ap_date_format
 
@@ -57,20 +57,9 @@ def show_paginated_page(page_number: int) -> Response:
         body_html.append(f"Categories: {' &bull; '.join(post_categories)}")
         body_html.append("</article>")
 
-    if prev_page or next_page:
-        body_html.append("<p class='pagination-nav'>")
-
-    if prev_page:
-        body_html.append(f"<a href='/{prev_page}'>&laquo; Previous</a>")
-
-    if prev_page and next_page:
-        body_html.append(" &bull; ")
-
-    if next_page:
-        body_html.append(f"<a href='/{next_page}'>Next &raquo;</a>")
-
-    if prev_page or next_page:
-        body_html.append("</p>")
+    wep_make_pagination_links(f"<a href='/{prev_page}'>&laquo; Previous</a>",
+                              f"<a href='/{next_page}'>Next &raquo;",
+                              body_html)
 
     output = wep_erect(title=f"{SITE_NAME}: Home", body_html="\n".join(body_html))
     return Response(output, mimetype='text/html')
