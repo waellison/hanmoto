@@ -11,7 +11,7 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
-from flask import Blueprint, Response, abort
+from flask import Blueprint, Response, abort, g
 from flask_admin.contrib.sqla import ModelView
 import sqlalchemy
 from . import wep_erect, SITE_NAME, admin, wep_make_pagination_links
@@ -53,18 +53,7 @@ def read_specific_post(post_id: int) -> Response:
     if not post.is_published:
         abort(403, "Cannot read unpublished post")
 
-    body_html = list()
-    body_html.append(post.html_serialize_name())
-    body_html.append(post.html_serialize_author())
-    body_html.append(post.html_serialize_content())
-    body_html.append("<h4>Categories</h4>\n<ul>")
-    body_html.extend([c.listify() for c in post.categories])
-    body_html.append("</ul>")
-
-    wep_make_pagination_links(prev_page, next_page, body_html)
-
-    inner_html = "\n".join(body_html)
-    output = wep_erect(title=post.name, body_html=inner_html)
+    output = wep_erect(template="post-view.html", post=post, title=post.name, paginators=[prev_page, next_page])
     return Response(output, mimetype='text/html')
 
 

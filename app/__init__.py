@@ -31,7 +31,7 @@ def wep_create_app(test_config=None):
         SQLALCHEMY_ECHO=True,
         SESSION_PERMANENT=False,
         SESSION_TYPE="filesystem",
-        FLASK_ADMIN_SWATCH='cerulean'
+        FLASK_ADMIN_SWATCH='cerulean',
     )
 
     if test_config is None:

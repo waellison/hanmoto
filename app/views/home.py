@@ -57,7 +57,7 @@ def show_paginated_page(page_number: int) -> Response:
         body_html.append(f"Categories: {' &bull; '.join(post_categories)}")
         body_html.append("</article>")
 
-    wep_make_pagination_links(prev_page, next_page, body_html)
+    wep_make_pagination_links(prev_page, next_page)
 
     output = wep_erect(title=f"{SITE_NAME}: Home", body_html="\n".join(body_html))
     return Response(output, mimetype='text/html')

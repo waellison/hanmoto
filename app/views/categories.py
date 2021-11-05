@@ -11,8 +11,10 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from datetime import datetime
 from sqlalchemy import sql
-from flask import Blueprint, Response, jsonify, session
+from sqlalchemy.exc import SQLAlchemyError
+from flask import Blueprint, Response, jsonify, session, request, redirect, url_for, abort
 from flask_admin.contrib.sqla import ModelView
 from . import wep_erect, SITE_NAME, admin
 from ..models import db
@@ -82,3 +84,20 @@ def list_all_categories():
     inner_html = "\n".join(body_html)
     output = wep_erect(title="Categories on this site", body_html=inner_html)
     return Response(output, mimetype='text/html')
+
+
+@bp.route('/new', methods=['POST'])
+def add_new_category():
+    cat = WEPCategory(True,
+                      datetime.fromisoformat(request.form['creation_date']),
+                      datetime.fromisoformat(request.form['last_edit_date']),
+                      datetime.fromisoformat(request.form['publication_date']),
+                      request.form['name'],
+                      request.form['summary'],
+                      None)
+    try:
+        db.session.add(cat)
+        db.session.commit()
+        return redirect(url_for('home.show_homepage'))
+    except SQLAlchemyError as ex:
+        abort(400, ex)
