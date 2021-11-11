@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    command: bash run.sh
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - 80:5000
+    environment:
+      - DB_NAME=willpress
+      - DB_USER=postgres
+      - DB_PASSWORD=hunter2
+      - DB_HOST=pg
+      - DB_PORT=5432
+      - DATABASE=postgres
+    depends_on:
+      - pg
+  pg:
+    image: postgres:13.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: hunter2
+      POSTGRES_DB: willpress
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/data
+      - ./data/flask_init.sql:/docker-entrypoint-initdb.d/1-flask-init.sql
+

@@ -35,6 +35,9 @@ class WEPUser(db.Model):
         self.email = email
         self.avatar = avatar
 
+    def __str__(self):
+        return self.username
+
     def json_serialize(self):
         return {
             'user_id': self.user_id,

@@ -34,7 +34,7 @@
         </menu>
     </nav>
     <main>
-        ${body_html}
+        <%block name='container_contents' />
     </main>
     <footer>
         <p>

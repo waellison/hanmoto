@@ -18,6 +18,7 @@ October 2021
 from slugify import slugify
 from . import db
 from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable
+from .WEPPost import WEPPost
 
 """Intermediate table representing the many-to-many
    relationship between posts and categories."""
@@ -69,11 +70,14 @@ class WEPCategory(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable):
         self.summary = summary
         self.parent_category = parent
 
+    def __str__(self):
+        return self.name
+
     def json_serialize(self) -> dict[str, any]:
         """
         Converts a category object to be serialized into JSON.
 
-        Returns:
+        Return s:
             A dict containing all the attributes of this category object.
         """
         attrs = super().json_serialize()
@@ -101,3 +105,6 @@ class WEPCategory(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable):
             A string containing an HTML list entry linking to the view for this category.
         """
         return f"<li>{self.linkify()} ({len(self.associated_posts)} posts)</li>"
+
+    def make_edit_link(self) -> str:
+        return f"<a href='/admin/categories/edit?id={self.id}'>[Edit]</a>"

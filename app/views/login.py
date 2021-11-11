@@ -1,5 +1,6 @@
-from flask import Blueprint, Response, request, abort, redirect, session, url_for
-from mako.template import Template
+from flask import (
+    Blueprint, Response, request, abort, redirect, session, url_for, render_template
+)
 from . import wep_erect, SITE_NAME
 from ..utils import wep_encypher_pw, wep_check_all_params_against_set
 from ..models.WEPUser import WEPUser
@@ -33,6 +34,5 @@ def do_login():
         else:
             abort(400)
     elif request.method == 'GET':
-        body_html = Template(filename="./templates/login.mako").render()
-        return Response(wep_erect(body_html=body_html, extra_stylesheets=['login'],
+        return Response(wep_erect(template_name="login.html", extra_stylesheets=['login'],
                                   title=f'{SITE_NAME} | Login'), mimetype='text/html')

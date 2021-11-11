@@ -1,0 +1,12 @@
+{% extends 'default.html' %}
+
+{% block content %}
+    <h2>{{ post.name }}</h2>
+    {{ post.html_serialize_name() }}
+    {{ post.html_serialize_author() }}
+    {{ post.html_serialize_content() }}
+    <h4>Categories</h4>
+    {% for c in post.categories %}
+        {{ c.listify() }}
+    {% endfor %}
+{% endblock %}
