@@ -2,7 +2,7 @@ from datetime import datetime
 from ..models.WEPPost import WEPPost
 
 
-def test_post_json_serialize(client, author):
+def test_post_json_serialize(author):
     my_post = WEPPost(
                 is_published=True,
                 create_date=datetime(1970, 1, 1),
@@ -15,9 +15,9 @@ def test_post_json_serialize(client, author):
 
     expected_output = {
         "is_published": True,
-        "creation_date": "1970-01-01",
-        "last_edit_date": "1970-01-01",
-        "publication_date": "1970-01-01",
+        "creation_date": "1970-01-01T00:00:00",
+        "last_edit_date": "1970-01-01T00:00:00",
+        "publication_date": "1970-01-01T00:00:00",
         "name": "First Post!",
         "content": "First post.",
         "slug": "first-post",

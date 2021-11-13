@@ -61,7 +61,6 @@ class WEPEntity(db.Model):
             A dict containing the entity's attributes.
         """
         return {
-            'id': self.id,
             'is_published': self.is_published,
             'creation_date': self.creation_date.isoformat(),
             'publication_date': self.publication_date.isoformat(),
