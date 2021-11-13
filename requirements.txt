@@ -4,6 +4,7 @@ cachelib==0.4.1
 certifi==2021.10.8
 charset-normalizer==2.0.7
 click==8.0.3
+coverage==6.1.2
 Faker==9.5.2
 Flask==2.0.2
 Flask-Admin==1.5.8
