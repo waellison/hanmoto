@@ -40,7 +40,6 @@ class WEPUser(db.Model):
 
     def json_serialize(self):
         return {
-            'user_id': self.user_id,
             'username': self.username,
             'email': self.email,
             'avatar': self.avatar
