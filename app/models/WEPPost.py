@@ -49,11 +49,11 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
             content: [string] a Markdown-formatted string containing the post's content
             author: [integer] key to the author of this post
         """
-        super().__init__(is_published, create_date, modify_date, publish_date)
-        self.slug = slugify(name)
-        self.name = name
-        self.content = content
-        self.summary = summary
+        WEPEntity.__init__(self, is_published, create_date, modify_date, publish_date)
+        WEPSummarizable.__init__(self, summary)
+        WEPContentful.__init__(self, content)
+        WEPNameable.__init__(self, name)
+        WEPSluggable.__init__(self, name)
         self.author = author
 
     def __str__(self):
@@ -66,11 +66,11 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         Returns:
             A dict containing the post's attributes
         """
-        attrs = super().json_serialize()
-        attrs['name'] = self.name
-        attrs['summary'] = self.summary
-        attrs['slug'] = self.slug
-        attrs['content'] = self.content
+        attrs = WEPEntity.json_serialize(self)
+        attrs['name'] = WEPNameable.json_serialize(self)["name"]
+        attrs['summary'] = WEPSummarizable.json_serialize(self)
+        attrs['slug'] = WEPSluggable.json_serialize(self)["slug"]
+        attrs['content'] = WEPContentful.json_serialize(self)
         attrs['author'] = self.author.json_serialize()
         return attrs
 
