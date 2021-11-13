@@ -71,6 +71,7 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         attrs['summary'] = self.summary
         attrs['slug'] = self.slug
         attrs['content'] = self.content
+        attrs['author'] = self.author.json_serialize()
         return attrs
 
     def linkify(self, presigil="", postsigil=""):
