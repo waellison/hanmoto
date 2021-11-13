@@ -14,6 +14,7 @@ October 2021
 import datetime
 from markdown import Markdown
 from smartypants import smartypants
+from slugify import slugify
 from . import db
 
 
@@ -64,7 +65,7 @@ class WEPEntity(db.Model):
             'is_published': self.is_published,
             'creation_date': self.creation_date.isoformat(),
             'publication_date': self.publication_date.isoformat(),
-            'last_edit_date': self.last_edit_date.isoformat()
+            'modification_date': self.last_edit_date.isoformat()
         }
 
 
@@ -79,7 +80,10 @@ class WEPSummarizable(db.Model):
     """The summary pertaining to this entity.  Stored as Markdown text."""
     summary = db.Column(db.String(270), nullable=True)
 
-    def html_serialize_summary(self) -> str:
+    def __init__(self, summary):
+        self.summary = summary
+
+    def html_serialize(self) -> str:
         """
         Converts an entity's summary into HTML output.
 
@@ -88,6 +92,10 @@ class WEPSummarizable(db.Model):
         """
         markdown = Markdown()
         return smartypants(markdown.convert(source=self.summary))
+
+    def json_serialize(self) -> dict:
+        return {"body": self.html_serialize(),
+                "mime_type": "text/html"}
 
 
 class WEPNameable(db.Model):
@@ -99,19 +107,11 @@ class WEPNameable(db.Model):
     __abstract__ = True
     name = db.Column(db.String(90), nullable=False)
 
-    def html_serialize_name(self, level=1) -> str:
-        """
-        Converts an entity's name into HTML as a heading.
-        Args:
-            level: the heading level of the object (integer between 1 and 6 inclusive)
+    def __init__(self, name):
+        self.name = name
 
-        Returns:
-            a string of HTML as a heading at the specified level containing the entity's name
-        """
-        if level < 1 or level > 6:
-            raise ValueError("heading level must be between 1 and 6")
-
-        return f"<h{level}>{self.name}</h{level}>"
+    def json_serialize(self) -> dict:
+        return {"name": self.name}
 
 
 class WEPSluggable(db.Model):
@@ -125,6 +125,12 @@ class WEPSluggable(db.Model):
     """A lowercase, hyphen-separated string suitable for URLs."""
     slug = db.Column(db.String(90), nullable=False)
 
+    def __init__(self, name):
+        self.slug = slugify(name)
+
+    def json_serialize(self):
+        return {"slug": self.slug}
+
 
 class WEPContentful(db.Model):
     """
@@ -137,7 +143,14 @@ class WEPContentful(db.Model):
     """Longform text associated with an entity, stored as Markdown source."""
     content = db.Column(db.Text)
 
-    def html_serialize_content(self) -> str:
+    def __init__(self, content):
+        self.content = content
+
+    def json_serialize(self) -> dict:
+        return {"body": self.html_serialize(),
+                "mime_type": "text/html"}
+
+    def html_serialize(self) -> str:
         """
         Converts an entity's text into HTML.
 
