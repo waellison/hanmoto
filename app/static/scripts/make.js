@@ -36,8 +36,9 @@ function make(tagName, data) {
     }
   }
 
-  if(data.append)
+  if(data.append) {
     makeAppend(e, data.append);
+  }
 
   if(data.attr) {
     for(let [name, value] of Object.entries(data.attr)) {
