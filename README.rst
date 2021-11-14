@@ -2,16 +2,16 @@ Welcome to Uchapishaji
 --------------------
 
 .. image:: https://api.codacy.com/project/badge/Grade/bdbb12c7597e40c9b3e0fa8b7c39a5bb
-   :alt: Codacy Badge
+   :alt: Codacy Quality Badge
    :target: https://app.codacy.com/gh/tnwae/uchapishaji?utm_source=github.com&utm_medium=referral&utm_content=tnwae/uchapishaji&utm_campaign=Badge_Grade_Settings
 
 .. image:: https://api.codacy.com/project/badge/Coverage/bdbb12c7597e40c9b3e0fa8b7c39a5bb
-   :alt: Codacy Badge
+   :alt: Codacy Coverage Badge
    :target: https://app.codacy.com/gh/tnwae/uchapishaji?utm_source=github.com&utm_medium=referral&utm_content=tnwae/uchapishaji&utm_campaign=Badge_Coverage_Settings
 
-.. image:: https://github.com/tnwae/uchapishaji/actions/workflows/pylint.yml/badge.svg
-   :alt: Pylint
-   :target: https://github.com/tnwae/uchapishaji/actions/workflows/pylint.yml
+.. image:: https://github.com/tnwae/uchapishaji/actions/workflows/python-app.yml/badge.svg
+   :alt: Python-App
+   :target: https://github.com/tnwae/uchapishaji/actions/workflows/python-app.yml
 
 *Uchapishaji* is a modern blog engine for the ancient Web.  It is designed
 to present content in a way suitable for any template but also to expose
