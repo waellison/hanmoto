@@ -7,7 +7,6 @@ from ..models.WEPBaseEntities import (
     WEPContentful
 )
 
-
 def test_wep_entity_to_json():
     entity = WEPEntity(True,
                        datetime(1970, 1, 1),
