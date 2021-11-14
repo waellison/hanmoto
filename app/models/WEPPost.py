@@ -18,6 +18,7 @@ from flask import session
 from . import db
 from ..utils import wep_ap_date_format
 from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful
+from .WEPUser import WEPUser
 
 
 class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful):

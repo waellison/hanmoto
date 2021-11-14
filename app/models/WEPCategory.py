@@ -18,6 +18,7 @@ October 2021
 from slugify import slugify
 from . import db
 from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable
+from .WEPPost import WEPPost
 
 """Intermediate table representing the many-to-many
    relationship between posts and categories."""
