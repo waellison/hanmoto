@@ -1,18 +1,8 @@
-from datetime import datetime
-from ..models.WEPPost import WEPPost
+def test_post_stringize(test_post):
+    assert str(test_post) == "First Post!"
 
 
-def test_post_json_serialize(author):
-    my_post = WEPPost(
-                is_published=True,
-                create_date=datetime(1970, 1, 1),
-                modify_date=datetime(1970, 1, 1),
-                publish_date=datetime(1970, 1, 1),
-                name="First Post!",
-                summary="First post.",
-                content="First post.",
-                author=author)
-
+def test_post_json_serialize(test_post, author):
     expected_output = {
         "is_published": True,
         "creation_date": "1970-01-01T00:00:00",
@@ -35,4 +25,4 @@ def test_post_json_serialize(author):
         }
     }
 
-    assert my_post.json_serialize() == expected_output
+    assert test_post.json_serialize() == expected_output

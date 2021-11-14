@@ -11,3 +11,4 @@ def test_user_json_serialize(author):
         "email": "nobody@example.com",
         "avatar": "/images/devnull.jpg"
     }
+    assert author.json_serialize() == expected
