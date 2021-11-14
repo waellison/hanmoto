@@ -36,4 +36,3 @@ def test_post_json_serialize(author):
     }
 
     assert my_post.json_serialize() == expected_output
-

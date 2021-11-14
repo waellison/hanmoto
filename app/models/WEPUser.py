@@ -44,6 +44,3 @@ class WEPUser(db.Model):
             'email': self.email,
             'avatar': self.avatar
         }
-
-    def html_serialize(self):
-        return f"<a href='/users/{self.user_id}'>{self.username}</a>"

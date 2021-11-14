@@ -6,7 +6,6 @@ from .. import utils
 
 def test_encypher_pw():
     cleartext = "hunter2"
-
     salt, encyphered_password = utils.wep_encypher_pw(cleartext)
     assert encyphered_password == hashlib.sha512((cleartext + salt).encode('utf-8')).hexdigest()
 
@@ -52,3 +51,9 @@ def test_make_gravatar_img_link(author):
 def test_ap_date_format(abbr: str, month: int):
     date = datetime.datetime(1970, month, 1)
     assert f"{abbr} 1, 1970" == utils.wep_ap_date_format(date)
+
+
+def test_ap_date_format_invalid_month():
+    with pytest.raises(ValueError) as exc:
+        _ = utils.wep_ap_date_format(datetime.datetime(1970, 13, 1))
+    assert "month must be in 1..12" in str(exc.value)
