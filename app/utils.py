@@ -21,11 +21,6 @@ def wep_encypher_pw(password: str, salt=None) -> (str, str):
     return salt, hashlib.sha512((password + salt).encode('utf-8')).hexdigest()
 
 
-def func_name():
-    """Return the name of the function we are currently in."""
-    return sys._getframe().f_back.f_code.co_name
-
-
 def wep_check_some_params_against_set(valid_params: set, request: dict) -> str:
     """
     Check one or more request parameters against a set of valid inputs.
@@ -35,7 +30,7 @@ def wep_check_some_params_against_set(valid_params: set, request: dict) -> str:
         request: the request object containing zero or more parameters
 
     Returns:
-        The missing key if one is determined to be missing
+        The invalid key if one is determined to be invalid
     """
     for key in request.keys():
         if key not in valid_params:
