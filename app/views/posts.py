@@ -11,6 +11,7 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+import json
 from flask import Blueprint, Response, abort
 from flask_admin.contrib.sqla import ModelView
 import sqlalchemy
@@ -36,6 +37,7 @@ def read_specific_post(post_id: int) -> Response:
     posts = WEPPost.query.all()
     where = posts.index(post)
 
+    """
     if where != 0:
         prev_page = posts[where - 1].linkify(presigil="&laquo; ")\
                         if posts[where - 1].is_published \
@@ -49,22 +51,30 @@ def read_specific_post(post_id: int) -> Response:
                         else None
     else:
         next_page = None
+    """
 
     if not post.is_published:
         abort(403, "Cannot read unpublished post")
 
-    output = wep_erect(template="post-view.html", post=post, title=post.name, paginators=[prev_page, next_page])
+    output = wep_erect(template_name="post-view.html",
+                       post=json.loads(json.dumps(post.json_serialize())),
+                       title=post.name)
+
     return Response(output, mimetype='text/html')
 
 
 @bp.route('/all', methods=['GET'])
 def list_all_posts() -> Response:
-    posts = WEPPost.query.filter_by(is_published=True).order_by(sqlalchemy.desc(WEPPost.publication_date)).all()
+    posts = WEPPost.query.filter_by(is_published=True)\
+                         .order_by(sqlalchemy.desc(WEPPost.publication_date)).all()
     stuff = list()
     stuff.append(f"<h2>Posts on {SITE_NAME}</h2>")
     stuff.append("<ol>")
-    stuff.extend([p.listify() for p in posts if p.is_published])
+    stuff.extend([f"<li><a href='/posts/{p.id}'>{p.name}</li>"
+                  for p in posts if p.is_published])
     stuff.append("</ol>")
     post_html = "\n".join(stuff)
-    output = wep_erect(title="Posts on this site", body_html=post_html)
+    output = wep_erect(template_name="generic_body.html",
+                       title="Posts on this site",
+                       body_html=post_html)
     return Response(output, mimetype='text/html')

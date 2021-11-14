@@ -15,7 +15,14 @@ William Ellison
 October 2021
 """
 from . import db
-from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful
+from ..utils import wep_ap_date_format
+from .WEPBaseEntities import (
+    WEPEntity,
+    WEPSummarizable,
+    WEPNameable,
+    WEPSluggable,
+    WEPContentful
+)
 from .WEPUser import WEPUser
 
 
@@ -64,9 +71,18 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
             A dict containing the post's attributes
         """
         attrs = WEPEntity.json_serialize(self)
+        attrs['id'] = self.id
         attrs['name'] = WEPNameable.json_serialize(self)["name"]
         attrs['summary'] = WEPSummarizable.json_serialize(self)
         attrs['slug'] = WEPSluggable.json_serialize(self)["slug"]
         attrs['content'] = WEPContentful.json_serialize(self)
-        attrs['author'] = self.author.json_serialize()
+        attrs['categories'] = [cat.json_serialize() for cat in self.categories]
+        return attrs
+
+    def html_serialize(self, title_level=2) -> dict[str, str]:
+        attrs = dict()
+        attrs['name'] = WEPNameable.html_serialize(self, title_level)
+        attrs['summary'] = WEPSummarizable.html_serialize(self)
+        attrs['content'] = WEPContentful.html_serialize(self)
+        attrs['post_date'] = wep_ap_date_format(self.publication_date)
         return attrs

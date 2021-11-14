@@ -41,19 +41,29 @@ def read_specific_category_json(cat_id: int) -> Response:
     return jsonify(category.json_serialize())
 
 
+@bp.route("/<slug>", methods=['GET'])
+def read_specific_category_by_slug(slug: str) -> Response:
+    category_id = WEPCategory.query.filter_by(slug=slug)[0].id
+    return read_specific_category(category_id)
+
+
 @bp.route('/<int:cat_id>', methods=['GET'])
 def read_specific_category(cat_id: int) -> Response:
     category = WEPCategory.query.get_or_404(cat_id)
     edit_link = category.make_edit_link() if session.get('user') else ""
+    inner_html = category.html_serialize()
 
     body_html = list()
     body_html.append(f"<h2>Posts in category <em>{category.name}</em> {edit_link}</h2>")
-    body_html.append(category.html_serialize_summary())
+    body_html.append(inner_html["summary"])
     body_html.append("<ul>")
-    body_html.extend([p.listify() for p in category.associated_posts if p.is_published])
+    body_html.extend([f"<li><a href='/posts/{p.id}'>{p.name}</a></li>"
+                      for p in category.associated_posts if p.is_published])
     body_html.append("</ul>")
-    inner_html = "\n".join(body_html)
-    output = wep_erect(title=category.name, body_html=inner_html)
+
+    output = wep_erect(template_name="generic_body.html",
+                       title=category.name,
+                       body_html="\n".join(body_html))
     return Response(output, mimetype='text/html')
 
 

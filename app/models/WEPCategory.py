@@ -81,9 +81,19 @@ class WEPCategory(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable):
             A dict containing all the attributes of this category object.
         """
         attrs = super().json_serialize()
+        attrs['id'] = self.id
         attrs['name'] = self.name
         attrs['summary'] = self.summary
         attrs['slug'] = self.slug
+        attrs['associated_post_count'] = len(self.associated_posts)
+        return attrs
+
+    def html_serialize(self) -> dict[str, any]:
+        attrs = dict()
+        attrs['id'] = self.id
+        attrs['name'] = WEPNameable.html_serialize(self)
+        attrs['summary'] = WEPSummarizable.html_serialize(self)
+        attrs['slug'] = WEPSluggable.json_serialize(self)["slug"]
         attrs['associated_post_count'] = len(self.associated_posts)
         return attrs
 

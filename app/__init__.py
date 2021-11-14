@@ -20,24 +20,25 @@ from .models import db
 from .views import admin, categories, posts, home, users, login, logout
 
 
-def wep_create_app(test_config=None):
+def wep_create_app(test_config=True):
     """Create and return a new Flask app."""
     dotenv.load_dotenv("..")
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY=os.getenv("secret_key"),
-        SQLALCHEMY_DATABASE_URI="postgresql://postgres@pg:5432/willpress",
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SQLALCHEMY_ECHO=True,
-        SESSION_PERMANENT=False,
-        SESSION_TYPE="filesystem",
-        FLASK_ADMIN_SWATCH="cerulean",
-    )
 
-    if test_config is None:
-        app.config.from_pyfile("config.py", silent=True)
+    if test_config:
+        app.config.from_mapping(
+            SECRET_KEY=os.getenv("secret_key"),
+            SQLALCHEMY_DATABASE_URI="postgresql://postgres:hunter2@127.0.0.1:5432/uchapishaji",
+            SQLALCHEMY_TRACK_MODIFICATIONS=False,
+            SQLALCHEMY_ECHO=False,
+        )
     else:
-        app.config.mapping(test_config)
+        app.config.from_mapping(
+            SECRET_KEY=os.getenv("secret_key"),
+            SQLALCHEMY_DATABASE_URI="postgresql://postgres@pg:5432/uchapishaji",
+            SQLALCHEMY_TRACK_MODIFICATIONS=False,
+            SQLALCHEMY_ECHO=True,
+        )
 
     try:
         os.makedirs(app.instance_path)

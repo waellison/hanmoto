@@ -94,7 +94,7 @@ class WEPSummarizable(db.Model):
         return smartypants(markdown.convert(source=self.summary))
 
     def json_serialize(self) -> dict:
-        return {"body": self.html_serialize(),
+        return {"body": WEPSummarizable.html_serialize(self),
                 "mime_type": "text/html"}
 
 
@@ -112,6 +112,13 @@ class WEPNameable(db.Model):
 
     def json_serialize(self) -> dict:
         return {"name": self.name}
+
+    def html_serialize(self, title_level=0):
+        if title_level in range(1, 7):
+            inner_html = f"<h{title_level}>{self.name}</h{title_level}>"
+        else:
+            inner_html = self.name
+        return inner_html
 
 
 class WEPSluggable(db.Model):
@@ -147,7 +154,7 @@ class WEPContentful(db.Model):
         self.content = content
 
     def json_serialize(self) -> dict:
-        return {"body": self.html_serialize(),
+        return {"body": WEPContentful.html_serialize(self),
                 "mime_type": "text/html"}
 
     def html_serialize(self) -> str:

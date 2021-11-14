@@ -5,6 +5,7 @@ import random
 from faker import Faker
 from app import wep_create_app
 from app.models import db
+from app.models.WEPUser import WEPUser
 from app.models.WEPPost import WEPPost
 from app.models.WEPCategory import WEPCategory, post_categories
 
@@ -30,10 +31,16 @@ def truncate_tables():
 
 
 def main():
-    app = wep_create_app()
+    app = wep_create_app(True)
     app.app_context().push()
     truncate_tables()
     fake = Faker()
+    author = WEPUser("wae", "hunter2", "itdoesnthavetomakesense",
+                   "nobody@example.com", "/images/nobodyman.jpg")
+
+    db.session.add(author)
+    db.session.commit()
+
 
     with open('./tools/wordlist.10000', 'r') as fh:
         words = fh.readlines()
@@ -47,8 +54,14 @@ def main():
         content = "\n\n".join(fake.paragraphs(10))
         summary = fake.paragraph()
 
-        post = WEPPost(is_published=True, publish_date=publish_date, create_date=create_date,
-                       modify_date=modify_date, name=title_str, content=content, summary=summary)
+        post = WEPPost(is_published=True,
+                       publish_date=publish_date,
+                       create_date=create_date,
+                       modify_date=modify_date,
+                       name=title_str,
+                       content=content,
+                       summary=summary,
+                       author=author.user_id)
         db.session.add(post)
 
     db.session.commit()
@@ -60,8 +73,13 @@ def main():
         title_str = " ".join(random.sample(wordlist, random.randint(1, 2))).title()
         summary = fake.paragraph()
 
-        category = WEPCategory(is_published=True, publish_date=publish_date, create_date=create_date,
-                               modify_date=modify_date, name=title_str, summary=summary, parent=None)
+        category = WEPCategory(is_published=True,
+                               publish_date=publish_date,
+                               create_date=create_date,
+                               modify_date=modify_date,
+                               name=title_str,
+                               summary=summary,
+                               parent=None)
         db.session.add(category)
 
     db.session.commit()

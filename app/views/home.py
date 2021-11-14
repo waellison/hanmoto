@@ -46,18 +46,19 @@ def show_paginated_page(page_number: int) -> Response:
     for post in my_posts:
         if not post.is_published:
             continue
-        title_str = post.html_serialize_name(level=2)
-        summary_html = post.html_serialize_summary()
+        inner_html = post.html_serialize(title_level=2)
         body_html.append("<article>")
-        body_html.append(title_str)
+        body_html.append(inner_html["name"])
         body_html.append(f"<p class='post-date'>Posted {wep_ap_date_format(post.publication_date)} by {post.post_author.html_serialize()}</p>")
-        body_html.append(summary_html)
+        body_html.append(inner_html["summary"])
         body_html.append(f"<p><a href='/posts/{post.id}'>Read more&hellip;</a></p>")
         post_categories = [c.linkify() for c in post.categories]
         body_html.append(f"Categories: {' &bull; '.join(post_categories)}")
         body_html.append("</article>")
 
-    wep_make_pagination_links(prev_page, next_page)
+    #wep_make_pagination_links(prev_page, next_page)
 
-    output = wep_erect(title=f"{SITE_NAME}: Home", body_html="\n".join(body_html))
+    output = wep_erect(title=f"{SITE_NAME}: Home",
+                       body_html="\n".join(body_html),
+                       paginators=[prev_page, next_page])
     return Response(output, mimetype='text/html')

@@ -17,11 +17,6 @@ def test_post_json_serialize(test_post, author):
         "summary": {
             "body": "<p>First post.</p>",
             "mime_type": "text/html"
-        },
-        "author": {
-            "username": "wae",
-            "email": "nobody@example.com",
-            "avatar": "/images/devnull.jpg"
         }
     }
 
