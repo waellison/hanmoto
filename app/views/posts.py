@@ -11,10 +11,10 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
-from flask import Blueprint, Response, abort, g
+from flask import Blueprint, Response, abort
 from flask_admin.contrib.sqla import ModelView
 import sqlalchemy
-from . import wep_erect, SITE_NAME, admin, wep_make_pagination_links
+from . import wep_erect, SITE_NAME, admin
 from ..models import db
 from ..models.WEPPost import WEPPost
 

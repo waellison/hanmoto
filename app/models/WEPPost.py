@@ -15,11 +15,9 @@ William Ellison
 October 2021
 """
 from flask import session
-from slugify import slugify
 from . import db
 from ..utils import wep_ap_date_format
 from .WEPBaseEntities import WEPEntity, WEPSummarizable, WEPNameable, WEPSluggable, WEPContentful
-from .WEPUser import WEPUser
 
 
 class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful):

@@ -1,6 +1,5 @@
 import secrets
 import hashlib
-import sys
 from datetime import datetime
 
 

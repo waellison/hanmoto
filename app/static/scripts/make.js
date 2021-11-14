@@ -6,7 +6,7 @@
  * Licensing status of this code is uncertain, I will remove and adapt
  * if there are issues.
  */
-const makeAppend = function(e, data) {
+function makeAppend(e, data) {
   if(data instanceof Array) {
     for(let row of data) {
       e.append(row instanceof Array ? make(...row) : row);
@@ -16,22 +16,22 @@ const makeAppend = function(e, data) {
   }
 }
 
-const setAttribute = function(e, name, value) {
+function setAttribute(e, name, value) {
   if(value instanceof Array
-  || ("object" == typeof value)
-  || ("function" == typeof value)) {
+     || ("object" == typeof value)
+     || ("function" == typeof value)) {
     e[name] = value;
   } else {
     e.setAttribute(name === "className" ? "class" : name, value);
   }
 }
 
-const make = function(tagName, data) {
+function make(tagName, data) {
   let e = document.createElement(tagName);
   if(data) {
-    if (data instanceof Array
-        || data instanceof Node
-        || ("object" !== typeof data)) {
+    if(data instanceof Array
+       || data instanceof Node
+       || ("object" !== typeof data)) {
       return makeAppend(e, data), e;
     }
   }
@@ -62,10 +62,11 @@ const make = function(tagName, data) {
   return e;
 }
 
-const purge = function(e, amt) {
+function purge(e, amt) {
   let dir = amt < 0 ? "firstChild" : "lastChild";
   amt = Math.abs(amt);
   while(amt--) {
     e.removeChild(e[dir]);
   }
 }
+
