@@ -77,6 +77,7 @@ class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentf
         attrs['slug'] = WEPSluggable.json_serialize(self)["slug"]
         attrs['content'] = WEPContentful.json_serialize(self)
         attrs['categories'] = [cat.json_serialize() for cat in self.categories]
+        # attrs['tags'] = [tag.json_serialize() for tag in self.tags]
         return attrs
 
     def html_serialize(self, title_level=2) -> dict[str, str]:

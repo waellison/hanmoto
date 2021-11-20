@@ -110,6 +110,9 @@ class WEPNameable(db.Model):
     def __init__(self, name):
         self.name = name
 
+    def __str__(self):
+        return self.name
+
     def json_serialize(self) -> dict:
         return {"name": self.name}
 

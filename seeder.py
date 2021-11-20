@@ -8,6 +8,7 @@ from app.models import db
 from app.models.WEPUser import WEPUser
 from app.models.WEPPost import WEPPost
 from app.models.WEPCategory import WEPCategory, post_categories
+from app.models.WEPTag import WEPTag, post_tags
 
 
 POST_COUNT = 50
@@ -82,6 +83,21 @@ def main():
                                parent=None)
         db.session.add(category)
 
+    for _ in range(TAG_COUNT):
+        create_date = random_date()
+        publish_date = random_date()
+        modify_date = random_date()
+        title_str = " ".join(random.sample(wordlist, random.randint(1, 2))).title()
+        summary = fake.paragraph()
+
+        tag = WEPTag(is_published=True,
+                     publish_date=publish_date,
+                     create_date=create_date,
+                     modify_date=modify_date,
+                     name=title_str,
+                     summary=summary)
+        db.session.add(tag)
+
     db.session.commit()
 
     post_category_pairs = set()
@@ -101,7 +117,27 @@ def main():
         for pair in list(post_category_pairs)
     ]
     insert_postcats_query = post_categories.insert().values(new_categories)
+
+    post_tag_pairs = set()
+    while len(post_tag_pairs) <= POST_COUNT * 4:
+        candidate = (
+            random.randint(1, POST_COUNT),
+            random.randint(1, TAG_COUNT)
+        )
+
+        if candidate in post_tag_pairs:
+            continue
+
+        post_tag_pairs.add(candidate)
+
+    new_tags = [
+        {"post_id": pair[0], "tag_id": pair[1]}
+        for pair in list(post_category_pairs)
+    ]
+    insert_posttags_query = post_tags.insert().values(new_tags)
+
     db.session.execute(insert_postcats_query)
+    db.session.execute(insert_posttags_query)
     db.session.commit()
 
 

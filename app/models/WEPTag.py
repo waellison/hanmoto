@@ -1,8 +1,8 @@
-"""Category model for WillPress.
+"""Tag model for Uchapishaji.
 
-A category is a high-level descriptive categorization for posts.
-Categories are hierarchical and are intended to describe broad
-categorizations of posts.
+A tag is a low-level descriptive categorization for posts.
+Tags are non-hierarchical and are meant to describe individual
+posts that share a common theme.
 
 "An Excellent Blog Engine"
 
@@ -21,36 +21,33 @@ from .WEPPost import WEPPost
 
 """Intermediate table representing the many-to-many
    relationship between posts and categories."""
-post_categories = db.Table(
-    'post_categories',
+post_tags = db.Table(
+    'post_tags',
     db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
-    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
 )
 
 
-class WEPCategory(WEPTaxonomic):
+class WEPTag(WEPTaxonomic):
     """
     Class describing the "Category" entity in WillPress.
 
-    A Category is a broad, high-level taxonomy for textual content.  Categories may be sorted into
-    hierarchical groupings.  For example, a WillPress user writing about video games might have one
-    category for seventh-generation console games, with subcategories for PlayStation 3 and Xbox
-    360.
+    A Tag is a narrow, low-level taxonomy for textual content.  Tags are non-hierarchical.  An
+    Uchapishaji user writing about a given video game might tag it as 'Crash Bandicoot'
+    (game title), 'Naughty Dog' (developer), 'Universal Interactive Studios' (publisher), and
+    '1996' (release year), but it would be categorized under the Sony PlayStation.
     """
-    __tablename__ = 'categories'
+    __tablename__ = 'tags'
 
-    """Category's parent, as an id within the categories table."""
-    parent_category = db.Column(db.Integer, db.ForeignKey('categories.id', ondelete="SET NULL"), nullable=True)
-
-    """Posts associated with this category, as an SQLAlchemy backreference.
-       This creates the `categories` attribute on `WEPPost` which is a list of
+    """Posts associated with this tag, as an SQLAlchemy backreference.
+       This creates the `tags` attribute on `WEPPost` which is a list of
        that post's assigned categories."""
     associated_posts = db.relationship('WEPPost',
-                                       secondary=post_categories,
+                                       secondary=post_tags,
                                        lazy='subquery',
-                                       backref=db.backref('categories'))
+                                       backref=db.backref('tags'))
 
-    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary, parent):
+    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary):
         """
         Create a new category.
 
@@ -61,15 +58,13 @@ class WEPCategory(WEPTaxonomic):
             publish_date: [datetime] the date the category was published
             name: [string] the name of the category
             summary: [string] a summary describing the category
-            parent: [int] the numeric id of another category which is the parent of this one
         """
         WEPTaxonomic.__init__(self,
-                              "category",
-                              "categories",
+                              "tag",
+                              "tags",
                               is_published,
                               create_date,
                               modify_date,
                               publish_date,
                               name,
                               summary)
-        self.parent_category = parent
