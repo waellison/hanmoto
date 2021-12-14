@@ -15,12 +15,13 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from markdown import Markdown
+from smartypants import smartypants
+from slugify import slugify
 from . import db
-from .WEPTaxonomic import WEPTaxonomic
 from .WEPPost import WEPPost
 
-"""Intermediate table representing the many-to-many
-   relationship between posts and categories."""
+
 post_tags = db.Table(
     'post_tags',
     db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
@@ -28,43 +29,34 @@ post_tags = db.Table(
 )
 
 
-class WEPTag(WEPTaxonomic):
-    """
-    Class describing the "Category" entity in WillPress.
-
-    A Tag is a narrow, low-level taxonomy for textual content.  Tags are non-hierarchical.  An
-    Uchapishaji user writing about a given video game might tag it as 'Crash Bandicoot'
-    (game title), 'Naughty Dog' (developer), 'Universal Interactive Studios' (publisher), and
-    '1996' (release year), but it would be categorized under the Sony PlayStation.
-    """
+class WEPTag:
     __tablename__ = 'tags'
 
-    """Posts associated with this tag, as an SQLAlchemy backreference.
-       This creates the `tags` attribute on `WEPPost` which is a list of
-       that post's assigned categories."""
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    slug = db.Column(db.String(90), nullable=False)
+    name = db.Column(db.String(90), nullable=False)
+    summary = db.Column(db.String, nullable=False)
+
     associated_posts = db.relationship('WEPPost',
                                        secondary=post_tags,
                                        lazy='subquery',
                                        backref=db.backref('tags'))
 
-    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary):
-        """
-        Create a new category.
+    def __init__(self, name: str, summary: str):
+        self.name = name
+        self.summary = summary
+        self.slug = slugify(name)
 
-        Args:
-            is_published: [Boolean] whether the category has been published
-            create_date: [datetime] the date the category was created
-            modify_date: [datetime] the date the category was last modified
-            publish_date: [datetime] the date the category was published
-            name: [string] the name of the category
-            summary: [string] a summary describing the category
-        """
-        WEPTaxonomic.__init__(self,
-                              "tag",
-                              "tags",
-                              is_published,
-                              create_date,
-                              modify_date,
-                              publish_date,
-                              name,
-                              summary)
+    def html_serialize(self) -> str:
+        markdown = Markdown()
+        return smartypants(markdown.convert(source=self.summary))
+
+    def json_serialize(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "slug": self.slug,
+            "taxonomyType": "tag",
+            "summary": self.summary,
+            "associatedPosts": len(self.associated_posts)
+        }
