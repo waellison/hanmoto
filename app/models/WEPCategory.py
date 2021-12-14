@@ -35,7 +35,7 @@ class WEPCategory:
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     slug = db.Column(db.String(90), nullable=False)
     name = db.Column(db.String(90), nullable=False)
-    summary = db.Column(db.String, nullable=False)
+    summary = db.Column(db.Text, nullable=False)
     parent_category = db.Column(db.Integer,
                                 db.ForeignKey('categories.id', ondelete="SET NULL"),
                                 nullable=True)

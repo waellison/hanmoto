@@ -35,7 +35,7 @@ class WEPTag:
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     slug = db.Column(db.String(90), nullable=False)
     name = db.Column(db.String(90), nullable=False)
-    summary = db.Column(db.String, nullable=False)
+    summary = db.Column(db.Text, nullable=False)
 
     associated_posts = db.relationship('WEPPost',
                                        secondary=post_tags,
