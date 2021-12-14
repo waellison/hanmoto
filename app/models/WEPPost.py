@@ -14,76 +14,59 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from datetime import datetime
+from slugify import slugify
+from markdown import Markdown
+from smartypants import smartypants
 from . import db
 from ..utils import wep_ap_date_format
-from .WEPBaseEntities import (
-    WEPEntity,
-    WEPSummarizable,
-    WEPNameable,
-    WEPSluggable,
-    WEPContentful
-)
 from .WEPUser import WEPUser
 
 
-class WEPPost(WEPEntity, WEPSluggable, WEPSummarizable, WEPNameable, WEPContentful):
-    """
-    Model class for posts.
-
-    A post is a date-stamped content entity attributed to an author.  It consists of
-    the content, an optional summary of that content, a name, a slug derived from the
-    name, and the standard attributes of all WEPEntity instances.
-    """
+class WEPPost:
     __tablename__ = "posts"
 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    is_published = db.Column(db.Boolean, nullable=False, default=False)
+    creation_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    last_edit_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    publication_date = db.Column(db.DateTime, default=datetime.now())
+    name = db.Column(db.String(90), nullable=False)
+    slug = db.Column(db.String(90), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    summary = db.Column(db.Text, nullable=False)
     author = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     post_author = db.relationship('WEPUser', backref=db.backref('posts'))
 
-    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary, content, author):
-        """
-        Create a new post.
-
-        Args:
-            is_published: [boolean] whether the post is published or not
-            create_date: [datetime] the date the post was created
-            modify_date: [datetime] the date the post was last modified
-            publish_date: [datetime] the date the post was published
-            name: [string] the name of the post
-            summary: [string] a Markdown-formatted string containing a brief summary of the post
-            content: [string] a Markdown-formatted string containing the post's content
-            author: [integer] key to the author of this post
-        """
-        WEPEntity.__init__(self, is_published, create_date, modify_date, publish_date)
-        WEPSummarizable.__init__(self, summary)
-        WEPContentful.__init__(self, content)
-        WEPNameable.__init__(self, name)
-        WEPSluggable.__init__(self, name)
+    def __init__(self, name: str, summary: str, content: str, author: int, is_published: bool = False):
+        self.name = name
+        self.summary = summary
+        self.content = content
+        self.slug = slugify(name)
+        self.is_published = is_published
         self.author = author
 
     def __str__(self):
         return self.name
 
     def json_serialize(self) -> dict[str, any]:
-        """
-        Serialize a post into a format fit for JSON.
-
-        Returns:
-            A dict containing the post's attributes
-        """
-        attrs = WEPEntity.json_serialize(self)
-        attrs['id'] = self.id
-        attrs['name'] = WEPNameable.json_serialize(self)["name"]
-        attrs['summary'] = WEPSummarizable.json_serialize(self)
-        attrs['slug'] = WEPSluggable.json_serialize(self)["slug"]
-        attrs['content'] = WEPContentful.json_serialize(self)
-        attrs['categories'] = [cat.json_serialize() for cat in self.categories]
-        # attrs['tags'] = [tag.json_serialize() for tag in self.tags]
-        return attrs
+        return {
+            "id": self.id,
+            "name": self.name,
+            "slug": self.slug,
+            "tags": [t.json_serialize() for t in self.tags],
+            "categories": [c.json_serialize() for c in self.categories],
+            "summary": self.summary,
+            "content": self.content,
+        }
 
     def html_serialize(self, title_level=2) -> dict[str, str]:
         attrs = dict()
-        attrs['name'] = WEPNameable.html_serialize(self, title_level)
-        attrs['summary'] = WEPSummarizable.html_serialize(self)
-        attrs['content'] = WEPContentful.html_serialize(self)
+        markdown = Markdown()
+        attrs['name'] = f"<h{title_level}>{self.name}</h{title_level}>"
+        attrs['summary'] = smartypants(markdown.convert(source=self.summary))
+        attrs['content'] = smartypants(markdown.convert(source=self.content))
         attrs['post_date'] = wep_ap_date_format(self.publication_date)
+        attrs['tags'] = [t.json_serialize() for t in self.tags]
+        attrs['categories'] = [c.json_serialize() for c in self.categories]
         return attrs
