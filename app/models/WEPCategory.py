@@ -15,12 +15,13 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from markdown import Markdown
+from smartypants import smartypants
+from slugify import slugify
 from . import db
-from .WEPTaxonomic import WEPTaxonomic
 from .WEPPost import WEPPost
 
-"""Intermediate table representing the many-to-many
-   relationship between posts and categories."""
+
 post_categories = db.Table(
     'post_categories',
     db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
@@ -28,48 +29,36 @@ post_categories = db.Table(
 )
 
 
-class WEPCategory(WEPTaxonomic):
-    """
-    Class describing the "Category" entity in WillPress.
-
-    A Category is a broad, high-level taxonomy for textual content.  Categories may be sorted into
-    hierarchical groupings.  For example, a WillPress user writing about video games might have one
-    category for seventh-generation console games, with subcategories for PlayStation 3 and Xbox
-    360.
-    """
+class WEPCategory:
     __tablename__ = 'categories'
 
-    """Category's parent, as an id within the categories table."""
-    parent_category = db.Column(db.Integer, db.ForeignKey('categories.id', ondelete="SET NULL"), nullable=True)
-
-    """Posts associated with this category, as an SQLAlchemy backreference.
-       This creates the `categories` attribute on `WEPPost` which is a list of
-       that post's assigned categories."""
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    slug = db.Column(db.String(90), nullable=False)
+    name = db.Column(db.String(90), nullable=False)
+    parent_category = db.Column(db.Integer,
+                                db.ForeignKey('categories.id', ondelete="SET NULL"),
+                                nullable=True)
     associated_posts = db.relationship('WEPPost',
                                        secondary=post_categories,
                                        lazy='subquery',
                                        backref=db.backref('categories'))
 
-    def __init__(self, is_published, create_date, modify_date, publish_date, name, summary, parent):
-        """
-        Create a new category.
-
-        Args:
-            is_published: [Boolean] whether the category has been published
-            create_date: [datetime] the date the category was created
-            modify_date: [datetime] the date the category was last modified
-            publish_date: [datetime] the date the category was published
-            name: [string] the name of the category
-            summary: [string] a summary describing the category
-            parent: [int] the numeric id of another category which is the parent of this one
-        """
-        WEPTaxonomic.__init__(self,
-                              "category",
-                              "categories",
-                              is_published,
-                              create_date,
-                              modify_date,
-                              publish_date,
-                              name,
-                              summary)
+    def __init__(self, name: str, summary: str, parent: int = None):
+        self.name = name
+        self.summary = summary
         self.parent_category = parent
+        self.slug = slugify(name)
+
+    def html_serialize(self) -> str:
+        markdown = Markdown()
+        return smartypants(markdown.convert(source=self.summary))
+
+    def json_serialize(self) -> dict:
+        return {
+            "id": self.id,
+            "name": self.name,
+            "slug": self.slug,
+            "taxonomyType": "category",
+            "summary": self.summary,
+            "parentCategoryId": self.parent_category
+        }
