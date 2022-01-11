@@ -29,7 +29,7 @@ post_tags = db.Table(
 )
 
 
-class WEPTag:
+class WEPTag(db.Model):
     __tablename__ = 'tags'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -58,5 +58,5 @@ class WEPTag:
             "slug": self.slug,
             "taxonomyType": "tag",
             "summary": self.summary,
-            "associatedPosts": len(self.associated_posts)
+            "associatedPosts": [p.json_serialize() for p in self.associated_posts]
         }

@@ -2,28 +2,16 @@ version: "3.8"
 services:
   web:
     build: .
-    container_name: uchapi
     command: bash run.sh
     volumes:
       - .:/usr/src/app/
     ports:
-      - "80:5000"
-    environment:
-      - DB_NAME=willpress
-      - DB_USER=postgres
-      - DB_PASSWORD=hunter2
-      - DB_HOST=pg
-      - DB_PORT=5432
-      - DATABASE=postgres
-    depends_on:
-      - pg
+      - "5000:5000"
   pg:
-    container_name: uchapi_db
-    image: postgres:13.2-alpine
+    image: postgres:alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: hunter2
-      POSTGRES_DB: uchapishaji
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"

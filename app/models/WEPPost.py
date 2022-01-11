@@ -23,7 +23,7 @@ from ..utils import wep_ap_date_format
 from .WEPUser import WEPUser
 
 
-class WEPPost:
+class WEPPost(db.Model):
     __tablename__ = "posts"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

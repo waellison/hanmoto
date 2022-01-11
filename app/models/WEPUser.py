@@ -42,7 +42,8 @@ class WEPUser(db.Model):
         return {
             'username': self.username,
             'email': self.email,
-            'avatar': self.avatar
+            'avatar': self.avatar,
+            'posts': [p.json_serialize() for p in self.posts]
         }
 
     def html_serialize(self):

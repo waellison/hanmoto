@@ -29,7 +29,7 @@ post_categories = db.Table(
 )
 
 
-class WEPCategory:
+class WEPCategory(db.Model):
     __tablename__ = 'categories'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -62,5 +62,5 @@ class WEPCategory:
             "taxonomyType": "category",
             "summary": self.summary,
             "parentCategoryId": self.parent_category,
-            "associatedPosts": len(self.associated_posts)
+            "associatedPosts": [p.json_serialize() for p in self.associated_posts()]
         }

@@ -28,7 +28,7 @@ def wep_create_app(test_config=True):
     if test_config:
         app.config.from_mapping(
             SECRET_KEY=os.getenv("secret_key"),
-            SQLALCHEMY_DATABASE_URI="postgresql://postgres:hunter2@127.0.0.1:5432/uchapishaji",
+            SQLALCHEMY_DATABASE_URI="postgresql://postgres:hunter2@pg:5432/uchapishaji",
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             SQLALCHEMY_ECHO=False,
         )
