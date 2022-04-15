@@ -15,12 +15,6 @@ dialect) that I know the best, but nothing in the design of Willpress
 should preclude using it with other databases like MySQL/MariaDB,
 MS-SQL, Oracle, or SQLite.
 
-Willpress is going to use Markdown as its input language for markup and
-Jinja for templates.
-
-This code is very likely to be rewritten to the Django framework in the
-near future.
-
 Attributions
 ============
 The database schema used by Willpress is based on a schema devised by
