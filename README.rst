@@ -1,6 +1,10 @@
 Welcome to Willpress
 --------------------
 
+.. image:: https://api.codacy.com/project/badge/Grade/434cd26cf50743edbd8ef941b473ff4e
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/gh/waellison/willpress?utm_source=github.com&utm_medium=referral&utm_content=waellison/willpress&utm_campaign=Badge_Grade_Settings
+
 *Willpress* is a modern blog engine for the ancient Web.  It is designed
 to present content in a way suitable for any template but also to expose
 a REST API that can be consumed by clients for legacy devices on any
