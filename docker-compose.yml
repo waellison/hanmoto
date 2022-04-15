@@ -2,9 +2,8 @@ version: "3.8"
 services:
   web:
     build: .
-    command: bash run.sh
     volumes:
-      - .:/usr/src/app/
+      - .:/usr/src/
     ports:
       - "5000:5000"
   pg:
@@ -18,3 +17,4 @@ services:
     volumes:
       - ./data:/data
       - ./data/flask_init.sql:/docker-entrypoint-initdb.d/1-flask-init.sql
+
