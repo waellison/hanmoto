@@ -1,3 +1,15 @@
+"""User-related views for WillPress.
+
+"An Excellent Blog Engine"
+
+Copyright (c) 2021-2022 by William Ellison.  This program is licensed under
+the terms of the Do What the Fuck You Want To Public License, version 2
+or later, as described in the COPYING file at the root of this
+distribution.
+
+William Ellison
+<waellison@gmail.com>
+"""
 from sqlalchemy import exc
 from flask import Blueprint, Response, request, abort, redirect, url_for, jsonify
 from ..models import db
