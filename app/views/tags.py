@@ -1,4 +1,4 @@
-"""Category-related views for WillPress.
+"""Tag-related views for WillPress.
 
 "An Excellent Blog Engine"
 
@@ -16,42 +16,42 @@ from sqlalchemy import sql
 from sqlalchemy.exc import SQLAlchemyError
 from flask import Blueprint, Response, jsonify, request, redirect, url_for, abort
 from ..models import db
-from ..models.WEPCategory import WEPCategory
+from ..models.WEPTag import WEPTag
 
 
-bp = Blueprint('categories-view', __name__, url_prefix='/categories')
+bp = Blueprint('tags-view', __name__, url_prefix='/tags')
 
 
 @bp.route("/<slug>", methods=['GET'])
-def read_specific_category_by_slug(slug: str) -> Response:
-    category_id = WEPCategory.query.filter_by(slug=slug)[0].id
-    return read_specific_category_json(category_id)
+def read_specific_tag_by_slug(slug: str) -> Response:
+    tag_id = WEPTag.query.filter_by(slug=slug)[0].id
+    return read_specific_tag_json(tag_id)
 
 
-@bp.route('/<int:cat_id>', methods=['GET'])
-def read_specific_category_json(cat_id: int) -> Response:
-    category = WEPCategory.query.get_or_404(cat_id)
-    return jsonify(category.json_serialize())
+@bp.route('/<int:gag_id>', methods=['GET'])
+def read_specific_tag_json(tag_id: int) -> Response:
+    tag = WEPTag.query.get_or_404(tag_id)
+    return jsonify(tag.json_serialize())
 
 
 @bp.route('/all', methods=['GET'])
-def list_all_categories():
+def list_all_tags():
     results = db.session.execute(sql.text("""
-        WITH category_occurrences AS (
-            SELECT category_id, COUNT(*) AS posts_in_category
-            FROM post_categories
-            GROUP BY category_id
-        ) SELECT c.id, c.name, co.posts_in_category
-        FROM category_occurrences co
-        INNER JOIN categories c
-        ON c.id = co.category_id
-        ORDER BY posts_in_category DESC;
+        WITH tag_occurrences AS (
+            SELECT tag_id, COUNT(*) AS posts_with_tag
+            FROM post_tags
+            GROUP BY tag_id
+        ) SELECT t.id, t.name, tao.posts_with_tag
+        FROM tag_occurrences tao
+        INNER JOIN tags t
+        ON t.id = tao.tag_id
+        ORDER BY posts_with_tag DESC;
     """)).fetchall()
 
-    categories = WEPCategory.query.order_by(WEPCategory.id)
+    tags = WEPTag.query.order_by(WEPTag.id)
 
     return jsonify({
-        cat.id: cat.json_serialize() for cat in categories
+        tag.id: tag.json_serialize() for tag in tags
     })
 
 

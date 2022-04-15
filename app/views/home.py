@@ -11,11 +11,7 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
-import sqlalchemy
-from flask import Blueprint, Response
-from . import wep_erect, SITE_NAME, POSTS_PER_PAGE, wep_make_pagination_links
-from ..models.WEPPost import WEPPost
-from ..utils import wep_ap_date_format
+from flask import Blueprint, Response, jsonify
 
 
 bp = Blueprint('home', __name__, url_prefix='/')
@@ -23,42 +19,6 @@ bp = Blueprint('home', __name__, url_prefix='/')
 
 @bp.route('/', methods=['GET', 'POST'])
 def show_homepage() -> Response:
-    return show_paginated_page(1)
-
-
-@bp.route('/<int:page_number>', methods=['GET', 'POST'])
-def show_paginated_page(page_number: int) -> Response:
-    posts = WEPPost.query.order_by(sqlalchemy.desc(WEPPost.publication_date))
-    body_html = []
-    offset = POSTS_PER_PAGE * (page_number - 1)
-    my_posts = posts[offset:offset + POSTS_PER_PAGE]
-
-    if page_number == 1:
-        prev_page = None
-    else:
-        prev_page = f"<a href='/{page_number - 1}'>&laquo; Previous</a>",
-
-    if len(my_posts) != POSTS_PER_PAGE:
-        next_page = None
-    else:
-        next_page = f"<a href='/{page_number + 1}'>Next &raquo;",
-
-    for post in my_posts:
-        if not post.is_published:
-            continue
-        inner_html = post.html_serialize(title_level=2)
-        body_html.append("<article>")
-        body_html.append(inner_html["name"])
-        body_html.append(f"<p class='post-date'>Posted {wep_ap_date_format(post.publication_date)} by {post.post_author.html_serialize()}</p>")
-        body_html.append(inner_html["summary"])
-        body_html.append(f"<p><a href='/posts/{post.id}'>Read more&hellip;</a></p>")
-        post_categories = [c.linkify() for c in post.categories]
-        body_html.append(f"Categories: {' &bull; '.join(post_categories)}")
-        body_html.append("</article>")
-
-    #wep_make_pagination_links(prev_page, next_page)
-
-    output = wep_erect(title=f"{SITE_NAME}: Home",
-                       body_html="\n".join(body_html),
-                       paginators=[prev_page, next_page])
-    return Response(output, mimetype='text/html')
+    return jsonify({
+        "alive": True
+    })
