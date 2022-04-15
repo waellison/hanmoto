@@ -16,10 +16,7 @@ October 2021
 """
 from datetime import datetime
 from slugify import slugify
-from markdown import Markdown
-from smartypants import smartypants
 from . import db
-from ..utils import wep_ap_date_format
 from .WEPUser import WEPUser
 
 

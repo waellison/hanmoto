@@ -16,8 +16,6 @@ William Ellison
 October 2021
 """
 from typing import Union
-from markdown import Markdown
-from smartypants import smartypants
 from slugify import slugify
 from . import db
 from .WEPPost import WEPPost
@@ -50,10 +48,6 @@ class WEPCategory(db.Model):
         self.summary = summary
         self.parent_category = parent
         self.slug = slugify(name)
-
-    def html_serialize(self) -> str:
-        markdown = Markdown()
-        return smartypants(markdown.convert(source=self.summary))
 
     def json_serialize(self) -> dict:
         return {

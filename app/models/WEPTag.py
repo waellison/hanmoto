@@ -15,8 +15,6 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
-from markdown import Markdown
-from smartypants import smartypants
 from slugify import slugify
 from . import db
 from .WEPPost import WEPPost
@@ -46,10 +44,6 @@ class WEPTag(db.Model):
         self.name = name
         self.summary = summary
         self.slug = slugify(name)
-
-    def html_serialize(self) -> str:
-        markdown = Markdown()
-        return smartypants(markdown.convert(source=self.summary))
 
     def json_serialize(self) -> dict:
         return {
