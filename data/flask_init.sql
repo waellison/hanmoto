@@ -1,10 +1,10 @@
--- init for the uchapishaji database.
+-- init for the willpress database.
 
-drop database if exists uchapishaji;
+drop database if exists willpress;
 
-create database uchapishaji;
+create database willpress;
 
-\c uchapishaji
+\c willpress
 
 set statement_timeout = 0;
 set lock_timeout = 0;
