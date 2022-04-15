@@ -15,27 +15,29 @@ October 2021
 import os
 import dotenv
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from .models import db
-from .views import admin, categories, posts, home, users, login, logout
+from .views import categories, tags, posts, home, users, login, logout
 
 
 def wep_create_app(test_config=True):
     """Create and return a new Flask app."""
     dotenv.load_dotenv("..")
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
 
     if test_config:
         app.config.from_mapping(
             SECRET_KEY=os.getenv("secret_key"),
-            SQLALCHEMY_DATABASE_URI="postgresql://postgres:hunter2@pg:5432/uchapishaji",
+            SQLALCHEMY_DATABASE_URI="postgresql://postgres:hunter2@localhost:5432/willpress",
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             SQLALCHEMY_ECHO=False,
         )
     else:
         app.config.from_mapping(
             SECRET_KEY=os.getenv("secret_key"),
-            SQLALCHEMY_DATABASE_URI="postgresql://postgres@pg:5432/uchapishaji",
+            SQLALCHEMY_DATABASE_URI="postgresql://postgres@pg:5432/willpress",
             SQLALCHEMY_TRACK_MODIFICATIONS=False,
             SQLALCHEMY_ECHO=True,
         )
@@ -50,11 +52,9 @@ def wep_create_app(test_config=True):
     db.create_all()
     _ = Migrate(app, db)
 
-    admin.app = app
-    admin.init_app(app)
-
     app.register_blueprint(posts.bp)
     app.register_blueprint(categories.bp)
+    app.register_blueprint(tags.bp)
     app.register_blueprint(home.bp)
     app.register_blueprint(login.bp)
     app.register_blueprint(logout.bp)
