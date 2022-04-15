@@ -18,24 +18,26 @@ from ..models import db
 from ..models.WEPTag import WEPTag
 
 
-bp = Blueprint('tags-view', __name__, url_prefix='/tags')
+bp = Blueprint("tags-view", __name__, url_prefix="/tags")
 
 
-@bp.route("/<slug>", methods=['GET'])
+@bp.route("/<slug>", methods=["GET"])
 def read_specific_tag_by_slug(slug: str) -> Response:
     tag_id = WEPTag.query.filter_by(slug=slug)[0].id
     return read_specific_tag_json(tag_id)
 
 
-@bp.route('/<int:gag_id>', methods=['GET'])
+@bp.route("/<int:gag_id>", methods=["GET"])
 def read_specific_tag_json(tag_id: int) -> Response:
     tag = WEPTag.query.get_or_404(tag_id)
     return jsonify(tag.json_serialize())
 
 
-@bp.route('/all', methods=['GET'])
+@bp.route("/all", methods=["GET"])
 def list_all_tags():
-    results = db.session.execute(sql.text("""
+    results = db.session.execute(
+        sql.text(
+            """
         WITH tag_occurrences AS (
             SELECT tag_id, COUNT(*) AS posts_with_tag
             FROM post_tags
@@ -45,23 +47,21 @@ def list_all_tags():
         INNER JOIN tags t
         ON t.id = tao.tag_id
         ORDER BY posts_with_tag DESC;
-    """)).fetchall()
+    """
+        )
+    ).fetchall()
 
     tags = WEPTag.query.order_by(WEPTag.id)
 
-    return jsonify({
-        tag.id: tag.json_serialize() for tag in tags
-    })
+    return jsonify({tag.id: tag.json_serialize() for tag in tags})
 
 
-@bp.route('/new', methods=['POST'])
+@bp.route("/new", methods=["POST"])
 def add_new_category():
-    cat = WEPCategory(request.form['name'],
-                      request.form['summary'],
-                      None)
+    cat = WEPCategory(request.form["name"], request.form["summary"], None)
     try:
         db.session.add(cat)
         db.session.commit()
-        return redirect(url_for('home.show_homepage'))
+        return redirect(url_for("home.show_homepage"))
     except SQLAlchemyError as ex:
         abort(400, ex)

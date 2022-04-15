@@ -17,7 +17,7 @@ def wep_encypher_pw(password: str, salt=None) -> (str, str):
     """
     if not salt:
         salt = secrets.token_hex(16)
-    return salt, hashlib.sha512((password + salt).encode('utf-8')).hexdigest()
+    return salt, hashlib.sha512((password + salt).encode("utf-8")).hexdigest()
 
 
 def wep_check_some_params_against_set(valid_params: set, request: dict) -> str:
@@ -49,7 +49,7 @@ def wep_make_gravatar_img(email: str) -> str:
         `hash` is the MD5 hash of the email with whitespace trimmed and
         in all lowercase.
     """
-    email_hash = hashlib.md5(email.strip().lower().encode('utf-8')).hexdigest()
+    email_hash = hashlib.md5(email.strip().lower().encode("utf-8")).hexdigest()
     return f"https://www.gravatar.com/avatar/{email_hash}.jpg"
 
 
@@ -79,7 +79,7 @@ def wep_ap_date_format(date: datetime) -> str:
             "Sept.",
             "Oct.",
             "Nov.",
-            "Dec."
+            "Dec.",
         ]
     }
     day = date.day

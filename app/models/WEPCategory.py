@@ -22,26 +22,30 @@ from .WEPPost import WEPPost
 
 
 post_categories = db.Table(
-    'post_categories',
-    db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
-    db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
+    "post_categories",
+    db.Column("post_id", db.Integer, db.ForeignKey("posts.id"), primary_key=True),
+    db.Column(
+        "category_id", db.Integer, db.ForeignKey("categories.id"), primary_key=True
+    ),
 )
 
 
 class WEPCategory(db.Model):
-    __tablename__ = 'categories'
+    __tablename__ = "categories"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     slug = db.Column(db.String(90), nullable=False)
     name = db.Column(db.String(90), nullable=False)
     summary = db.Column(db.Text, nullable=False)
-    parent_category = db.Column(db.Integer,
-                                db.ForeignKey('categories.id', ondelete="SET NULL"),
-                                nullable=True)
-    associated_posts = db.relationship('WEPPost',
-                                       secondary=post_categories,
-                                       lazy='subquery',
-                                       backref=db.backref('categories'))
+    parent_category = db.Column(
+        db.Integer, db.ForeignKey("categories.id", ondelete="SET NULL"), nullable=True
+    )
+    associated_posts = db.relationship(
+        "WEPPost",
+        secondary=post_categories,
+        lazy="subquery",
+        backref=db.backref("categories"),
+    )
 
     def __init__(self, name: str, summary: str, parent: Union[int, None] = None):
         self.name = name

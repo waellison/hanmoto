@@ -17,14 +17,17 @@ from ..models import db
 from ..models.WEPPost import WEPPost
 
 
-bp = Blueprint('posts-view', __name__, url_prefix='/posts')
+bp = Blueprint("posts-view", __name__, url_prefix="/posts")
 
 
-@bp.route('<int:post_id>', methods=['GET'])
+@bp.route("<int:post_id>", methods=["GET"])
 def read_specific_post(post_id: int) -> Response:
     post = WEPPost.query.get_or_404(post_id)
-    posts = WEPPost.query.filter_by(is_published=True)\
-                         .order_by(sqlalchemy.desc(WEPPost.publication_date)).all()
+    posts = (
+        WEPPost.query.filter_by(is_published=True)
+        .order_by(sqlalchemy.desc(WEPPost.publication_date))
+        .all()
+    )
     where = posts.index(post)
     prev_post = posts[where - 1].id if where != 0 else None
     next_post = posts[where + 1].id if where != len(posts) - 1 else None
@@ -40,8 +43,11 @@ def read_specific_post(post_id: int) -> Response:
     return the_response
 
 
-@bp.route('/all', methods=['GET'])
+@bp.route("/all", methods=["GET"])
 def list_all_posts() -> Response:
-    posts = WEPPost.query.filter_by(is_published=True) \
-                         .order_by(sqlalchemy.desc(WEPPost.publication_date)).all()
+    posts = (
+        WEPPost.query.filter_by(is_published=True)
+        .order_by(sqlalchemy.desc(WEPPost.publication_date))
+        .all()
+    )
     return jsonify([post.json_serialize() for post in posts])

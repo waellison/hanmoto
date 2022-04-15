@@ -21,14 +21,20 @@ class WEPUser(db.Model):
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(16), nullable=False, unique=True,
-                         index=db.Index('username_idx', postgresql_using='hash'))
+    username = db.Column(
+        db.String(16),
+        nullable=False,
+        unique=True,
+        index=db.Index("username_idx", postgresql_using="hash"),
+    )
     password = db.Column(db.String(128), nullable=False)
     salt = db.Column(db.String(32), nullable=False)
     email = db.Column(db.String(64), nullable=False, unique=True)
     avatar = db.Column(db.String, nullable=False)
 
-    def __init__(self, username: str, password: str, salt: str, email: str, avatar: str):
+    def __init__(
+        self, username: str, password: str, salt: str, email: str, avatar: str
+    ):
         self.username = username
         self.password = password
         self.salt = salt
@@ -40,8 +46,8 @@ class WEPUser(db.Model):
 
     def json_serialize(self):
         return {
-            'username': self.username,
-            'email': self.email,
-            'avatar': self.avatar,
-            'posts': [p.json_serialize() for p in self.posts]
+            "username": self.username,
+            "email": self.email,
+            "avatar": self.avatar,
+            "posts": [p.json_serialize() for p in self.posts],
         }

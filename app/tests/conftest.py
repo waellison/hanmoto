@@ -19,7 +19,7 @@ def author():
         password="hunter2",
         salt="itdoesnthavetomakesense",
         email="nobody@example.com",
-        avatar="/images/devnull.jpg"
+        avatar="/images/devnull.jpg",
     )
 
     return user
@@ -27,8 +27,10 @@ def author():
 
 @pytest.fixture
 def test_post(author):
-    return WEPPost(is_published=True,
-                   name="First Post!",
-                   summary="First post.",
-                   content="First post.",
-                   author=author)
+    return WEPPost(
+        is_published=True,
+        name="First Post!",
+        summary="First post.",
+        content="First post.",
+        author=author,
+    )

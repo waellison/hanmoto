@@ -19,24 +19,26 @@ from ..models import db
 from ..models.WEPCategory import WEPCategory
 
 
-bp = Blueprint('categories-view', __name__, url_prefix='/categories')
+bp = Blueprint("categories-view", __name__, url_prefix="/categories")
 
 
-@bp.route("/<slug>", methods=['GET'])
+@bp.route("/<slug>", methods=["GET"])
 def read_specific_category_by_slug(slug: str) -> Response:
     category_id = WEPCategory.query.filter_by(slug=slug)[0].id
     return read_specific_category_json(category_id)
 
 
-@bp.route('/<int:cat_id>', methods=['GET'])
+@bp.route("/<int:cat_id>", methods=["GET"])
 def read_specific_category_json(cat_id: int) -> Response:
     category = WEPCategory.query.get_or_404(cat_id)
     return jsonify(category.json_serialize())
 
 
-@bp.route('/all', methods=['GET'])
+@bp.route("/all", methods=["GET"])
 def list_all_categories():
-    results = db.session.execute(sql.text("""
+    results = db.session.execute(
+        sql.text(
+            """
         WITH category_occurrences AS (
             SELECT category_id, COUNT(*) AS posts_in_category
             FROM post_categories
@@ -46,23 +48,21 @@ def list_all_categories():
         INNER JOIN categories c
         ON c.id = co.category_id
         ORDER BY posts_in_category DESC;
-    """)).fetchall()
+    """
+        )
+    ).fetchall()
 
     categories = WEPCategory.query.order_by(WEPCategory.id)
 
-    return jsonify({
-        cat.id: cat.json_serialize() for cat in categories
-    })
+    return jsonify({cat.id: cat.json_serialize() for cat in categories})
 
 
-@bp.route('/new', methods=['POST'])
+@bp.route("/new", methods=["POST"])
 def add_new_category():
-    cat = WEPCategory(request.form['name'],
-                      request.form['summary'],
-                      None)
+    cat = WEPCategory(request.form["name"], request.form["summary"], None)
     try:
         db.session.add(cat)
         db.session.commit()
-        return redirect(url_for('home.show_homepage'))
+        return redirect(url_for("home.show_homepage"))
     except SQLAlchemyError as ex:
         abort(400, ex)

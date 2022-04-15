@@ -32,10 +32,17 @@ class WEPPost(db.Model):
     slug = db.Column(db.String(90), nullable=False)
     content = db.Column(db.Text, nullable=False)
     summary = db.Column(db.Text, nullable=False)
-    author = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    post_author = db.relationship('WEPUser', backref=db.backref('posts'))
+    author = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    post_author = db.relationship("WEPUser", backref=db.backref("posts"))
 
-    def __init__(self, name: str, summary: str, content: str, author: int, is_published: bool = False):
+    def __init__(
+        self,
+        name: str,
+        summary: str,
+        content: str,
+        author: int,
+        is_published: bool = False,
+    ):
         self.name = name
         self.summary = summary
         self.content = content
@@ -58,5 +65,5 @@ class WEPPost(db.Model):
             "tags": [t.json_serialize() for t in self.tags],
             "summary": self.summary,
             "content": self.content,
-            "is_published": self.is_published
+            "is_published": self.is_published,
         }

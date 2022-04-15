@@ -21,24 +21,23 @@ from .WEPPost import WEPPost
 
 
 post_tags = db.Table(
-    'post_tags',
-    db.Column('post_id', db.Integer, db.ForeignKey('posts.id'), primary_key=True),
-    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+    "post_tags",
+    db.Column("post_id", db.Integer, db.ForeignKey("posts.id"), primary_key=True),
+    db.Column("tag_id", db.Integer, db.ForeignKey("tags.id"), primary_key=True),
 )
 
 
 class WEPTag(db.Model):
-    __tablename__ = 'tags'
+    __tablename__ = "tags"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     slug = db.Column(db.String(90), nullable=False)
     name = db.Column(db.String(90), nullable=False)
     summary = db.Column(db.Text, nullable=False)
 
-    associated_posts = db.relationship('WEPPost',
-                                       secondary=post_tags,
-                                       lazy='subquery',
-                                       backref=db.backref('tags'))
+    associated_posts = db.relationship(
+        "WEPPost", secondary=post_tags, lazy="subquery", backref=db.backref("tags")
+    )
 
     def __init__(self, name: str, summary: str):
         self.name = name
@@ -52,5 +51,5 @@ class WEPTag(db.Model):
             "slug": self.slug,
             "taxonomyType": "tag",
             "summary": self.summary,
-            "associatedPosts": [p.json_serialize() for p in self.associated_posts]
+            "associatedPosts": [p.json_serialize() for p in self.associated_posts],
         }

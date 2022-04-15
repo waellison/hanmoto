@@ -7,7 +7,7 @@ def test_post_json_serialize(test_post, author):
         "is_published": True,
         "categories": [],
         "tags": [],
-        "id": None,    # only populates w/ a database connection
+        "id": None,  # only populates w/ a database connection
         "name": "First Post!",
         "content": "First post.",
         "slug": "first-post",
