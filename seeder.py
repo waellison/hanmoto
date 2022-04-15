@@ -56,9 +56,6 @@ def main():
         summary = fake.paragraph()
 
         post = WEPPost(is_published=True,
-                       publish_date=publish_date,
-                       create_date=create_date,
-                       modify_date=modify_date,
                        name=title_str,
                        content=content,
                        summary=summary,
@@ -74,11 +71,7 @@ def main():
         title_str = " ".join(random.sample(wordlist, random.randint(1, 2))).title()
         summary = fake.paragraph()
 
-        category = WEPCategory(is_published=True,
-                               publish_date=publish_date,
-                               create_date=create_date,
-                               modify_date=modify_date,
-                               name=title_str,
+        category = WEPCategory(name=title_str,
                                summary=summary,
                                parent=None)
         db.session.add(category)
@@ -90,11 +83,7 @@ def main():
         title_str = " ".join(random.sample(wordlist, random.randint(1, 2))).title()
         summary = fake.paragraph()
 
-        tag = WEPTag(is_published=True,
-                     publish_date=publish_date,
-                     create_date=create_date,
-                     modify_date=modify_date,
-                     name=title_str,
+        tag = WEPTag(name=title_str,
                      summary=summary)
         db.session.add(tag)
 
