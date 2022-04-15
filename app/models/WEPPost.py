@@ -50,6 +50,9 @@ class WEPPost(db.Model):
         return self.name
 
     def json_serialize(self) -> dict[str, any]:
+        """
+        Converts a post object into a dict that can be represented by JSON.
+        """
         return {
             "id": self.id,
             "name": self.name,
