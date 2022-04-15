@@ -28,10 +28,7 @@ def author():
 @pytest.fixture
 def test_post(author):
     return WEPPost(is_published=True,
-                create_date=datetime(1970, 1, 1),
-                modify_date=datetime(1970, 1, 1),
-                publish_date=datetime(1970, 1, 1),
-                name="First Post!",
-                summary="First post.",
-                content="First post.",
-                author=author)
+                   name="First Post!",
+                   summary="First post.",
+                   content="First post.",
+                   author=author)

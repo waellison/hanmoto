@@ -9,6 +9,7 @@ def test_user_json_serialize(author):
     expected = {
         "username": "wae",
         "email": "nobody@example.com",
-        "avatar": "/images/devnull.jpg"
+        "avatar": "/images/devnull.jpg",
+        "posts": []
     }
     assert author.json_serialize() == expected
