@@ -45,6 +45,3 @@ class WEPUser(db.Model):
             'avatar': self.avatar,
             'posts': [p.json_serialize() for p in self.posts]
         }
-
-    def html_serialize(self):
-        return f"<a href='/users/{self.user_id}>{self.username}</a>"

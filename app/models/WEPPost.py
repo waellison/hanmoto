@@ -54,19 +54,9 @@ class WEPPost(db.Model):
             "id": self.id,
             "name": self.name,
             "slug": self.slug,
-            "tags": [t.json_serialize() for t in self.tags],
             "categories": [c.json_serialize() for c in self.categories],
+            "tags": [t.json_serialize() for t in self.tags],
             "summary": self.summary,
             "content": self.content,
+            "is_published": self.is_published
         }
-
-    def html_serialize(self, title_level=2) -> dict[str, str]:
-        attrs = dict()
-        markdown = Markdown()
-        attrs['name'] = f"<h{title_level}>{self.name}</h{title_level}>"
-        attrs['summary'] = smartypants(markdown.convert(source=self.summary))
-        attrs['content'] = smartypants(markdown.convert(source=self.content))
-        attrs['post_date'] = wep_ap_date_format(self.publication_date)
-        attrs['tags'] = [t.json_serialize() for t in self.tags]
-        attrs['categories'] = [c.json_serialize() for c in self.categories]
-        return attrs

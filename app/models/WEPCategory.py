@@ -15,6 +15,7 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+from typing import Union
 from markdown import Markdown
 from smartypants import smartypants
 from slugify import slugify
@@ -44,7 +45,7 @@ class WEPCategory(db.Model):
                                        lazy='subquery',
                                        backref=db.backref('categories'))
 
-    def __init__(self, name: str, summary: str, parent: int = None):
+    def __init__(self, name: str, summary: str, parent: Union[int, None] = None):
         self.name = name
         self.summary = summary
         self.parent_category = parent
@@ -62,5 +63,4 @@ class WEPCategory(db.Model):
             "taxonomyType": "category",
             "summary": self.summary,
             "parentCategoryId": self.parent_category,
-            "associatedPosts": [p.json_serialize() for p in self.associated_posts()]
         }
