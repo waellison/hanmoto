@@ -1,4 +1,4 @@
-name: Pytest/Codacy
+name: build
 
 on: [push]
 
