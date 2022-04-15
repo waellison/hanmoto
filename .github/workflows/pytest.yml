@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pytest coverage
+        pip install -r requirements.txt
     - name: Performing unit testing with coverage.py/pytest
       run: |
         coverage run --branch -m pytest && coverage xml
