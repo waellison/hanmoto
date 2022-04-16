@@ -10,10 +10,8 @@ distribution.
 William Ellison
 <waellison@gmail.com>
 """
-import json
 from flask import Blueprint, Response, abort, jsonify
 import sqlalchemy
-from ..models import db
 from ..models.WEPPost import WEPPost
 
 
@@ -21,7 +19,18 @@ bp = Blueprint("posts-view", __name__, url_prefix="/posts")
 
 
 @bp.route("<int:post_id>", methods=["GET"])
-def read_specific_post(post_id: int) -> Response:
+def retrieve_specific_post(post_id: int) -> Response:
+    """
+    Retrieve a specific post by its id.
+
+    Args:
+        post_id [int]: The id of the post we wish to retrieve.
+
+    Returns:
+        A JSON object containing the retrieved post
+        HTTP 404 if post not found
+        HTTP 403 if post not published
+    """
     post = WEPPost.query.get_or_404(post_id)
     posts = (
         WEPPost.query.filter_by(is_published=True)
@@ -45,6 +54,13 @@ def read_specific_post(post_id: int) -> Response:
 
 @bp.route("/all", methods=["GET"])
 def list_all_posts() -> Response:
+    """
+    Retrieve all posts within a WillPress site.
+
+    Returns:
+        A JSON object containing every published post within
+        WillPress.
+    """
     posts = (
         WEPPost.query.filter_by(is_published=True)
         .order_by(sqlalchemy.desc(WEPPost.publication_date))
