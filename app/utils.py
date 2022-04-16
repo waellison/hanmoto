@@ -1,6 +1,5 @@
 import secrets
 import hashlib
-from datetime import datetime
 
 
 def wep_encypher_pw(password: str, salt=None) -> (str, str):
@@ -63,26 +62,3 @@ def wep_check_all_params_against_set(valid_params: set, request: dict) -> set:
     """
     set_diff = valid_params.difference(set(request.keys()))
     return set_diff
-
-
-def wep_ap_date_format(date: datetime) -> str:
-    abbreviations = {
-        "months": [
-            "Jan.",
-            "Feb.",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "Aug.",
-            "Sept.",
-            "Oct.",
-            "Nov.",
-            "Dec.",
-        ]
-    }
-    day = date.day
-    month = abbreviations["months"][date.month - 1]
-    year = date.year
-    return f"{month} {day}, {year}"

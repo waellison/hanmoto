@@ -45,34 +45,3 @@ def test_make_gravatar_img_link(author):
     test_hash = hashlib.md5(author.email.strip().lower().encode("utf-8")).hexdigest()
     href = f"https://www.gravatar.com/avatar/{test_hash}.jpg"
     assert utils.wep_make_gravatar_img(author.email) == href
-
-
-@pytest.mark.parametrize(
-    "abbr, month",
-    [
-        ("Jan.", 1),
-        ("Feb.", 2),
-        ("March", 3),
-        ("April", 4),
-        (
-            "May",
-            5,
-        ),
-        ("June", 6),
-        ("July", 7),
-        ("Aug.", 8),
-        ("Sept.", 9),
-        ("Oct.", 10),
-        ("Nov.", 11),
-        ("Dec.", 12),
-    ],
-)
-def test_ap_date_format(abbr: str, month: int):
-    date = datetime.datetime(1970, month, 1)
-    assert f"{abbr} 1, 1970" == utils.wep_ap_date_format(date)
-
-
-def test_ap_date_format_invalid_month():
-    with pytest.raises(ValueError) as exc:
-        _ = utils.wep_ap_date_format(datetime.datetime(1970, 13, 1))
-    assert "month must be in 1..12" in str(exc.value)
