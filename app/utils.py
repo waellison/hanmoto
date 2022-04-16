@@ -1,8 +1,9 @@
+from typing import Tuple, Union
 import secrets
 import hashlib
 
 
-def wep_encypher_pw(password: str, salt=None) -> (str, str):
+def wep_encypher_pw(password: str, salt: Union[None, str] = None) -> Tuple[str, str]:
     """
     Hash and salt a password string and return the SHA-512 digest of the
     hashed and salted string.

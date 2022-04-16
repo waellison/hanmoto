@@ -14,6 +14,7 @@ William Ellison
 <waellison@gmail.com>
 October 2021
 """
+import typing
 from datetime import datetime
 from slugify import slugify
 from . import db
@@ -53,7 +54,7 @@ class WEPPost(db.Model):
     def __str__(self):
         return self.name
 
-    def json_serialize(self) -> dict[str, any]:
+    def json_serialize(self) -> dict[str, typing.Any]:
         """
         Converts a post object into a dict that can be represented by JSON.
         """

@@ -15,6 +15,7 @@ greenlet==1.1.2
 idna==3.3
 itsdangerous==2.1.2
 lesscpy==0.15.0
+mypy==0.940
 ply==3.11
 psycopg2-binary==2.9.3
 pytest==7.1.1
