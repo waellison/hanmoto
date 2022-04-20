@@ -18,7 +18,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
 from .models import db
-from .views import categories, tags, posts, home, users
+from .views import errors, categories, tags, posts, home, users
 
 
 def wep_create_app(test_config=True):
@@ -52,6 +52,7 @@ def wep_create_app(test_config=True):
     db.create_all()
     _ = Migrate(app, db)
 
+    app.register_blueprint(errors.bp)
     app.register_blueprint(posts.bp)
     app.register_blueprint(categories.bp)
     app.register_blueprint(tags.bp)
