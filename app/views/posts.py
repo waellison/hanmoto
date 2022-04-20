@@ -19,7 +19,7 @@ bp = Blueprint("posts-view", __name__, url_prefix="/posts")
 
 
 @bp.route("<int:post_id>", methods=["GET"])
-def retrieve_specific_post(post_id: int) -> Response:
+def retrieve_specific_post_by_id(post_id: int) -> Response:
     """
     Retrieve a specific post by its id.
 
@@ -50,6 +50,26 @@ def retrieve_specific_post(post_id: int) -> Response:
 
     the_response = jsonify(post_object)
     return the_response
+
+
+@bp.route("<slug>", methods=["GET"])
+def retrieve_specific_post_by_slug(slug: str) -> Response:
+    """
+    Retrieve a specific post by its slug.
+
+    A slug is a spinal-case string generated at creation from the post
+    title.
+
+    Args:
+        slug [str]: The slug of the post we wish to retrieve.
+
+    Returns:
+        A JSON object containing the retrieved post
+        HTTP 404 if post not found
+        HTTP 403 if post not published
+    """
+    post = WEPPost.query.filter_by(slug=slug).first()
+    return retrieve_specific_post_by_id(post.id)
 
 
 @bp.route("/all", methods=["GET"])
