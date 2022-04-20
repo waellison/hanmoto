@@ -69,7 +69,10 @@ def retrieve_specific_post_by_slug(slug: str) -> Response:
         HTTP 403 if post not published
     """
     post = WEPPost.query.filter_by(slug=slug).first()
-    return retrieve_specific_post_by_id(post.id)
+
+    if post:
+        return retrieve_specific_post_by_id(post.id)
+    abort(404)
 
 
 @bp.route("/all", methods=["GET"])
