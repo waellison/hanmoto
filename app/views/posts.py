@@ -13,6 +13,7 @@ William Ellison
 from flask import Blueprint, Response, abort, jsonify
 import sqlalchemy
 from ..models.WEPPost import WEPPost
+from . import POSTS_PER_PAGE
 
 
 bp = Blueprint("posts-view", __name__, url_prefix="/posts")
@@ -90,3 +91,37 @@ def list_all_posts() -> Response:
         .all()
     )
     return jsonify([post.json_serialize() for post in posts])
+
+
+@bp.route("/most-recent", methods=["GET"])
+def get_most_recent_posts():
+    posts = (
+        WEPPost.query.filter_by(is_published=True)
+        .order_by(sqlalchemy.desc(WEPPost.publication_date))
+        .limit(POSTS_PER_PAGE)
+    )
+
+    return jsonify([p.json_serialize() for p in posts])
+
+
+@bp.route("/page/<int:page_number>", methods=["GET"])
+def get_paginated_posts(page_number: int):
+    all_posts = WEPPost.query.filter_by(is_published=True).order_by(
+        sqlalchemy.desc(WEPPost.publication_date)
+    )
+    this_page = slice(
+        page_number * POSTS_PER_PAGE, (page_number * POSTS_PER_PAGE) + POSTS_PER_PAGE
+    )
+    pages = 0
+    if all_posts.count() % POSTS_PER_PAGE == 0:
+        pages = all_posts.count() // POSTS_PER_PAGE
+    else:
+        pages = (all_posts.count() // POSTS_PER_PAGE) + 1
+
+    return jsonify(
+        {
+            "posts": [p.json_serialize() for p in all_posts[this_page]],
+            "page": page_number,
+            "pageCount": pages,
+        }
+    )

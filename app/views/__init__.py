@@ -12,3 +12,4 @@ William Ellison
 October 2021
 """
 SITE_NAME = "WillPress Test Site"
+POSTS_PER_PAGE = 5
