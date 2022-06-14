@@ -94,7 +94,7 @@ def list_all_posts() -> Response:
 
 
 @bp.route("/most-recent", methods=["GET"])
-def get_most_recent_posts():
+def get_most_recent_posts() -> Response:
     posts = (
         WEPPost.query.filter_by(is_published=True)
         .order_by(sqlalchemy.desc(WEPPost.publication_date))
@@ -105,7 +105,7 @@ def get_most_recent_posts():
 
 
 @bp.route("/page/<int:page_number>", methods=["GET"])
-def get_paginated_posts(page_number: int):
+def get_paginated_posts(page_number: int) -> Response:
     all_posts = WEPPost.query.filter_by(is_published=True).order_by(
         sqlalchemy.desc(WEPPost.publication_date)
     )
@@ -125,3 +125,8 @@ def get_paginated_posts(page_number: int):
             "pageCount": pages,
         }
     )
+
+
+@bp.route("/post", methods=["POST"])
+def add_new_post() -> Response:
+    pass
