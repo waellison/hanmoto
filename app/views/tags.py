@@ -35,7 +35,7 @@ def read_specific_tag_by_slug(slug: str) -> Response:
     return read_specific_tag_json(tag_id)
 
 
-@bp.route("/<int:gag_id>", methods=["GET"])
+@bp.route("/<int:tag_id>", methods=["GET"])
 def read_specific_tag_json(tag_id: int) -> Response:
     """
     Retrieve a specific slug by its numeric id.
